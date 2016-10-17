@@ -1,46 +1,54 @@
 package ru.ifmo.droid2016.tmdb.model;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
- * Информация о фильме, полученная из The Movie DB API
+ * Primary Movie Info from The Movie DB API
  */
 
 public class Movie {
 
     /**
-     * Path изображения постера фильма. Как из Path получить URL, описано здесь:
-     *
-     * https://developers.themoviedb.org/3/getting-started/languages
-     *
-     * В рамках ДЗ можно не выполнять отдельный запрос /configuration, а использовать
-     * базовый URL для картинок: http://image.tmdb.org/t/p/ и
+     * Poster Path (2/3 aspect ratio image-poster)
      */
     public final @NonNull String posterPath;
 
     /**
-     * Название фильма на языке оригинала.
+     * Backdrop Path (16/9 aspect ratio image-backdrop)
+     */
+    public final @NonNull String backdropPath;
+
+    /**
+     * Localized movie's title
+     */
+    public final @NonNull String title;
+
+    /**
+     * Original movie's title
      */
     public final @NonNull String originalTitle;
 
     /**
-     * Описание фильма на языке пользователя.
+     * Localized movie's description
      */
-    public final @Nullable String overviewText;
+    public final @NonNull String overview;
 
     /**
-     * Название фильма на языке пользователя.
+     * Average movie's vote rating
      */
-    public final @Nullable String localizedTitle;
+    public final @NonNull String voteAverage;
 
-    public Movie(String posterPath,
-                 String originalTitle,
-                 String overviewText,
-                 String localizedTitle) {
-        this.posterPath = "https://image.tmdb.org/t/p/w500" + posterPath;
+    public Movie(@NonNull String title,
+                 @NonNull String originalTitle,
+                 @NonNull String overview,
+                 @NonNull String voteAverage,
+                 @NonNull String posterPath,
+                 @NonNull String backdropPath) {
+        this.title = title;
         this.originalTitle = originalTitle;
-        this.overviewText = overviewText;
-        this.localizedTitle = localizedTitle;
+        this.overview = overview;
+        this.voteAverage = voteAverage;
+        this.posterPath = "https://image.tmdb.org/t/p/w500" + posterPath;
+        this.backdropPath = "https://image.tmdb.org/t/p/w500" + backdropPath;
     }
 }

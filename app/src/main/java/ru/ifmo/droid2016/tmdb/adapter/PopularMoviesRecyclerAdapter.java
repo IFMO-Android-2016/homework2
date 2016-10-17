@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -38,8 +39,28 @@ public class PopularMoviesRecyclerAdapter
     @Override
     public void onBindViewHolder(PopularMoviesRecyclerAdapter.ViewHolder holder, int position) {
         Movie movie = movies.get(position);
-        holder.movieTitle.setText(movie.localizedTitle);
-        holder.moviePoster.setImageURI(movie.posterPath);
+
+        holder.title.setText(movie.title.equals("") ? movie.originalTitle : movie.title);
+
+        if (!movie.overview.equals("")) {
+            holder.overview.setText(movie.overview);
+        }
+
+        holder.voteAverage.setText(movie.voteAverage);
+        Double voteAverage = Double.parseDouble(movie.voteAverage);
+
+        if (voteAverage >= 9) {
+            holder.voteAverageContainer.setBackgroundResource(R.color.voteAverageBlue);
+        } else if (voteAverage >= 7) {
+            holder.voteAverageContainer.setBackgroundResource(R.color.voteAverageGreen);
+        } else if (voteAverage >= 5) {
+            holder.voteAverageContainer.setBackgroundResource(R.color.voteAverageOrange);
+        } else if (voteAverage >= 3.5) {
+            holder.voteAverageContainer.setBackgroundResource(R.color.voteAverageRed);
+        }
+
+        holder.poster.setImageURI(movie.posterPath);
+//        holder.movieBackdrop.setImageURI(movie.backdropPath);
     }
 
     @Override
@@ -49,13 +70,28 @@ public class PopularMoviesRecyclerAdapter
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final SimpleDraweeView moviePoster;
-        final TextView movieTitle;
+        final TextView title;
+        final TextView overview;
+
+        final TextView voteAverage;
+        final LinearLayout voteAverageContainer;
+
+        final SimpleDraweeView poster;
+//        final SimpleDraweeView backdrop;
 
         ViewHolder(View itemView) {
             super(itemView);
-            moviePoster = (SimpleDraweeView) itemView.findViewById(R.id.movie_poster);
-            movieTitle = (TextView) itemView.findViewById(R.id.movie_title);
+            title = (TextView) itemView.findViewById(R.id.title);
+            overview = (TextView) itemView.findViewById(R.id.overview);
+
+            voteAverage = (TextView) itemView.findViewById(R.id.vote_average);
+            voteAverageContainer = (LinearLayout) itemView.findViewById(R.id.vote_average_container);
+
+            poster = (SimpleDraweeView) itemView.findViewById(R.id.poster);
+//            backdrop = (SimpleDraweeView) itemView.findViewById(R.id.movie_backdrop);
+
+            poster.setAspectRatio(2f / 3);
+//            backdrop.setAspectRatio(16f/9);
         }
 
         static ViewHolder newInstance(LayoutInflater inflater, ViewGroup parent) {

@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="movieVoteAverageGray">@android:color/darker_gray</color>
+    <color name="voteAverageRed">@android:color/holo_red_light</color>
+    <color name="voteAverageOrange">@android:color/holo_orange_light</color>
+    <color name="voteAverageGreen">@android:color/holo_green_light</color>
+    <color name="voteAverageBlue">@android:color/holo_blue_light</color>
 </resources>

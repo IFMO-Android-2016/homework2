@@ -16,12 +16,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 import ru.ifmo.droid2016.tmdb.model.Movie;
+import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     private static final String TAG = "Popular Movies";
@@ -47,6 +49,9 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
             connection = TmdbApi.getPopularMovies(Locale.getDefault().getLanguage());
             Log.d(TAG, "Performing request: " + connection.getURL());
 
+            connection.setConnectTimeout(15000); // 15 sec
+            connection.setReadTimeout(15000); // 15 sec
+
             stethoManager.preConnect(connection, null);
             connection.connect();
             stethoManager.postConnect();
@@ -55,11 +60,19 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
                 data = Parser.parse(
                         stethoManager.interpretResponseStream(connection.getInputStream()));
                 resultType = ResultType.OK;
+            } else {
+                throw new BadResponseException("HTTP: " + connection.getResponseCode()
+                        + ", " + connection.getResponseMessage());
             }
         } catch (IOException e) {
             stethoManager.httpExchangeFailed(e);
+
+            if (!IOUtils.isConnectionAvailable(getContext(), false)) {
+                resultType = ResultType.NO_INTERNET;
+                Log.e(TAG, "Failed to get popular movies: internet connection is not available", e);
+            }
         } catch (Exception e) {
-            Log.e(TAG, "Failed to get popular movies", e);
+            Log.e(TAG, "Failed to get popular movies: unexpected error", e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -100,10 +113,12 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
             for (int i = 0; i < res.length(); i++) {
                 JSONObject movie = res.getJSONObject(i);
                 movies.add(new Movie(
-                        movie.getString("poster_path"),
+                        movie.getString("title"),
                         movie.getString("original_title"),
                         movie.getString("overview"),
-                        movie.getString("title")
+                        movie.getString("vote_average"),
+                        movie.getString("poster_path"),
+                        movie.getString("backdrop_path")
                 ));
             }
 

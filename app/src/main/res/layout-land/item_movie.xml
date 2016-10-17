@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/movieMarginPrimary">
 
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/poster"
+            android:layout_width="@dimen/moviePosterWidth"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+
         <LinearLayout
             android:id="@+id/vote_average_container"
             android:layout_width="wrap_content"
@@ -37,21 +44,14 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/movieMarginPrimary"
             android:layout_marginRight="@dimen/movieMarginPrimary"
             android:layout_toLeftOf="@id/vote_average_container"
+            android:layout_toRightOf="@id/poster"
             android:textColor="#404040"
             android:textSize="20sp"
             android:textStyle="bold" />
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/poster"
-            android:layout_width="@dimen/moviePosterWidth"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/title"
-            android:layout_marginTop="@dimen/movieMarginPrimary" />
 
         <TextView
             android:id="@+id/overview"
