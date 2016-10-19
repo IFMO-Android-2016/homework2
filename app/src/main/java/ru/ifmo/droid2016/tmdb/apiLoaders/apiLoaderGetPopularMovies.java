@@ -23,8 +23,11 @@ import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 public class apiLoaderGetPopularMovies extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
-    public apiLoaderGetPopularMovies(Context context) {
+    private final int page;
+
+    public apiLoaderGetPopularMovies(Context context, int page) {
         super(context);
+        this.page = page;
     }
 
     @Override
@@ -32,10 +35,11 @@ public class apiLoaderGetPopularMovies extends AsyncTaskLoader<LoadResult<List<M
         if (!IOUtils.isConnectionAvailable(getContext(), false)) {
             return new LoadResult<>(ResultType.NO_INTERNET, null);
         }
+
         final List<Movie> movies = new ArrayList<>();
 
         try {
-            HttpURLConnection connection = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage().toString());
+            HttpURLConnection connection = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage().toString(), page);
             //String response = IOUtils.readToString(connection.getInputStream(), "utf-8");
             JsonReader jr = new JsonReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
             jr.beginObject();

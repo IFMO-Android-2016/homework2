@@ -40,9 +40,9 @@ public final class TmdbApi {
      *
      * @param lang язык пользователя
      */
-    public static HttpURLConnection getPopularMoviesRequest(String lang) throws IOException {
+    public static HttpURLConnection getPopularMoviesRequest(String lang, int page) throws IOException {
         String ulrRequest = BASE_URI.buildUpon().appendPath("3").appendPath("movies").encodedPath("get-popular-movies")
-                .appendQueryParameter("api_key", API_KEY).appendQueryParameter("language", lang).toString();
+                .appendQueryParameter("api_key", API_KEY).appendQueryParameter("language", lang).appendQueryParameter("page", String.valueOf(page)).toString();
         return (HttpURLConnection) new URL(ulrRequest).openConnection();
     }
 

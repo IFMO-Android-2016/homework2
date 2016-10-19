@@ -41,7 +41,10 @@ public class PopularMoviesActivity extends AppCompatActivity {
         rv.setAdapter(radapter);
     }
 
+
 }
+
+
 
 class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
@@ -76,7 +79,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
         super.onAttachedToRecyclerView(recyclerView);
     }*/
 
-    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+    class PersonViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView title;
         TextView discribe;
