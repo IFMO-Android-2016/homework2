@@ -2,6 +2,9 @@ package ru.ifmo.droid2016.tmdb.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.JsonReader;
+
+import java.io.IOException;
 
 /**
  * Информация о фильме, полученная из The Movie DB API
@@ -42,5 +45,42 @@ public class Movie {
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+    }
+
+    public static Movie parseMovie(JsonReader jr) throws IOException {
+        String posterPath = "";
+        String originalTitle = "";
+        String overviewText = "";
+        String localizedTitle = "";
+
+        jr.beginObject();
+
+        while (jr.hasNext()) {
+            final String id = jr.nextName();
+            if (id == null) {
+                jr.skipValue();
+                continue;
+            }
+
+            switch (id) {
+                case "poster_path" :
+                    posterPath = jr.nextString();
+                    break;
+                case "original_title" :
+                    originalTitle = jr.nextString();
+                    break;
+                case "overview" :
+                    overviewText = jr.nextString();
+                    break;
+                case "title" :
+                    localizedTitle = jr.nextString();
+                    break;
+                default:
+                    jr.skipValue();
+                    break;
+            }
+        }
+        jr.endObject();
+        return new Movie(posterPath, originalTitle, overviewText, localizedTitle);
     }
 }

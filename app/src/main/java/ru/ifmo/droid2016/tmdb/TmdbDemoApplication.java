@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
 
+
 public class TmdbDemoApplication extends Application {
 
     @Override
