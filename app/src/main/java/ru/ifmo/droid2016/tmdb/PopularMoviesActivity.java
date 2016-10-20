@@ -1,12 +1,11 @@
 package ru.ifmo.droid2016.tmdb;
 
-import android.net.Uri;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.MovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +15,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.ifmo.droid2016.tmdb.apiLoaders.apiLoaderGetPopularMovies;
+import ru.ifmo.droid2016.tmdb.loader.LoadResult;
+import ru.ifmo.droid2016.tmdb.loader.ResultType;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 
 /**
  * Экран, отображающий список популярных фильмов из The Movie DB.
  */
-public class PopularMoviesActivity extends AppCompatActivity {
+public class PopularMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
     RecyclerView rv;
     LinearLayoutManager llm;
     RVAdapter radapter;
+    List<Movie> currentMovies;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +37,32 @@ public class PopularMoviesActivity extends AppCompatActivity {
         rv.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
-        List<Movie> mv = new ArrayList<>();
-        mv.add( new Movie("dsds", "dsdsadadasda", "111", "222"));
-        mv.add(new Movie("123", "456", "678", "11111111"));
-        radapter = new RVAdapter(mv);
+        currentMovies = new ArrayList<>();
+        radapter = new RVAdapter(currentMovies);
         rv.setAdapter(radapter);
+        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().getLoader(0).forceLoad();
     }
 
 
+    @Override
+    public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
+        Loader<LoadResult<List<Movie>>> loader = new apiLoaderGetPopularMovies(this, 1);
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> data) {
+        if (data.resultType == ResultType.OK) {
+            currentMovies.addAll(0, data.data);
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
+
+    }
 }
 
 
