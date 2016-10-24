@@ -64,7 +64,7 @@ public class Movie {
 
             switch (id) {
                 case "poster_path" :
-                    posterPath = jr.nextString();
+                    posterPath = "https://image.tmdb.org/t/p/w500" + jr.nextString();
                     break;
                 case "original_title" :
                     originalTitle = jr.nextString();
