@@ -27,12 +27,13 @@ public final class TmdbApi {
      *
      * @param lang язык пользователя
      */
-    public static HttpURLConnection getPopularMoviesRequest(String lang) throws IOException {
+    public static HttpURLConnection getPopularMoviesRequest(String lang, int page) throws IOException {
         Uri uri = Uri.parse(String.valueOf(BASE_URI)).buildUpon()
                 .appendPath("movie")
                 .appendPath("popular")
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter("language", lang)
+                .appendQueryParameter("page", String.valueOf(page))
                 .build();
         return (HttpURLConnection) new URL(uri.toString()).openConnection();
     }

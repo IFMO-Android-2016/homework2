@@ -27,8 +27,9 @@ class MoviesParser {
             final JSONObject movieJson = moviesJson.optJSONObject(i);
 
             if (movieJson != null) {
+
                 movies.add(new Movie(
-                        movieJson.optString("poster_path", null),
+                        "https://image.tmdb.org/t/p/w780" + movieJson.optString("poster_path", null),
                         movieJson.optString("original_title", null),
                         movieJson.optString("overview", null),
                         movieJson.optString("title", null)

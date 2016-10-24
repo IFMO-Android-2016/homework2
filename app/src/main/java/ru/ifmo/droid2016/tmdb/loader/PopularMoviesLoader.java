@@ -19,9 +19,11 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
+    private final int page;
 
-    public PopularMoviesLoader(Context context) {
+    public PopularMoviesLoader(Context context, int page) {
         super(context);
+        this.page = page;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
         InputStream in = null;
 
         try {
-            connection = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage());
+            connection = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage(), page);
             stethoManager.preConnect(connection, null);
             connection.connect();
             stethoManager.postConnect();

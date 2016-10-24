@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import java.util.List;
 
 import ru.ifmo.droid2016.tmdb.loader.LoadResult;
@@ -29,30 +31,67 @@ public class PopularMoviesActivity extends AppCompatActivity
     private TextView errorTextView;
 
     private MovieRecyclerAdapter adapter;
+    private int downloadedPages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
 
+        SimpleDraweeView image = (SimpleDraweeView) findViewById(R.id.movie_image);
+
         progressBar = (ProgressBar) findViewById(R.id.progress);
         errorTextView = (TextView) findViewById(R.id.error_text);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new RecylcerDividersDecorator(getResources().getColor(R.color.divider_gray)));
 
         progressBar.setVisibility(View.VISIBLE);
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
 
+        downloadedPages = 1;
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            boolean loading;
+            int previousTotal = 0;
+            private int visibleThreshold = 2;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = recyclerView.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+
+                if (loading) {
+                    if (totalItemCount > previousTotal) {
+                        loading = false;
+                        previousTotal = totalItemCount;
+                    }
+                }
+                if (!loading && (totalItemCount - visibleItemCount)
+                        <= (firstVisibleItem + visibleThreshold)) {
+
+                    downloadedPages++;
+                    downloadPages();
+
+                    loading = true;
+                }
+            }
+        });
+        downloadPages();
+    }
+
+    private void downloadPages() {
         final Bundle loaderArgs = getIntent().getExtras();
-        getSupportLoaderManager().initLoader(0, loaderArgs,  this);
+        getSupportLoaderManager().initLoader(downloadedPages, loaderArgs,  this);
     }
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        return new PopularMoviesLoader(this);
+        return new PopularMoviesLoader(this, downloadedPages);
     }
 
     @Override
@@ -85,7 +124,7 @@ public class PopularMoviesActivity extends AppCompatActivity
             adapter = new MovieRecyclerAdapter(this);
             recyclerView.setAdapter(adapter);
         }
-        adapter.setMovies(movies);
+        adapter.addMovies(movies);
         progressBar.setVisibility(View.GONE);
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
