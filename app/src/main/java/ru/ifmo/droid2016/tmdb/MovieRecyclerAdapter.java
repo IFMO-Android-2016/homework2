@@ -21,15 +21,17 @@ class MovieRecyclerAdapter
 
     private final Context context;
     private final LayoutInflater layoutInflater;
-    private final List<Movie> movies = new ArrayList<>();
+    // private final List<Movie> movies = new ArrayList<>();
+    private List<Movie> movies;
 
     MovieRecyclerAdapter(Context context) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
     }
 
-    void addMovies(List<Movie> movies) {
-        this.movies.addAll(movies);
+    void setMovies(List<Movie> movies) {
+        this.movies = movies;
+        //this.movies.addAll(movies);
         notifyDataSetChanged();
     }
 
@@ -61,7 +63,7 @@ class MovieRecyclerAdapter
             holder.localizedTitleView.setVisibility(View.VISIBLE);
             holder.localizedTitleView.setText(movie.localizedTitle);
         }
-        Log.d(TAG, movie.posterPath);
+        //Log.d(TAG, movie.posterPath);
         holder.imageView.setImageURI(movie.posterPath);
         holder.overviewTextView.setText(movie.overviewText);
     }

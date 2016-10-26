@@ -26,12 +26,15 @@ import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 public class PopularMoviesActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
+    private static final String DOWNLOADED_PAGES = "downloaded_pages";
+
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView errorTextView;
 
     private MovieRecyclerAdapter adapter;
     private int downloadedPages;
+    private int shownPages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +56,14 @@ public class PopularMoviesActivity extends AppCompatActivity
         recyclerView.setVisibility(View.GONE);
 
         downloadedPages = 1;
+        shownPages = 0;
+        if (savedInstanceState != null) {
+            downloadedPages = savedInstanceState.getInt(DOWNLOADED_PAGES);
+        }
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             boolean loading;
-            int previousTotal = 0;
+            int previousTotal = 20;
             private int visibleThreshold = 2;
 
             @Override
@@ -71,22 +79,29 @@ public class PopularMoviesActivity extends AppCompatActivity
                         previousTotal = totalItemCount;
                     }
                 }
-                if (!loading && (totalItemCount - visibleItemCount)
-                        <= (firstVisibleItem + visibleThreshold)) {
 
+                if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+                    loading = true;
                     downloadedPages++;
                     downloadPages();
-
-                    loading = true;
                 }
             }
         });
         downloadPages();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(DOWNLOADED_PAGES, downloadedPages);
+    }
+
     private void downloadPages() {
         final Bundle loaderArgs = getIntent().getExtras();
-        getSupportLoaderManager().initLoader(downloadedPages, loaderArgs,  this);
+       //for (int page = shownPages + 1; page <= downloadedPages; page++) {
+            getSupportLoaderManager().initLoader(downloadedPages, loaderArgs, this);
+       // }
+       // shownPages = 0;
     }
 
     @Override
@@ -124,7 +139,7 @@ public class PopularMoviesActivity extends AppCompatActivity
             adapter = new MovieRecyclerAdapter(this);
             recyclerView.setAdapter(adapter);
         }
-        adapter.addMovies(movies);
+        adapter.setMovies(movies);
         progressBar.setVisibility(View.GONE);
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);

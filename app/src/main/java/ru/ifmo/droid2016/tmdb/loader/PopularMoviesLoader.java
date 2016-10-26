@@ -11,12 +11,16 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
+
+import static android.R.attr.data;
+import static ru.ifmo.droid2016.tmdb.loader.MoviesParser.parseMovies;
 
 public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     private final int page;
@@ -33,43 +37,46 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
 
     @Override
     public LoadResult<List<Movie>> loadInBackground() {
+        Log.d(TAG, "Load pages till: " + page);
+
         Log.d(TAG, "Start loading");
 
-        final StethoURLConnectionManager stethoManager = new StethoURLConnectionManager("API");
-
         ResultType resultType = ResultType.ERROR;
-        List<Movie> data = null;
+        final List<Movie> data = new ArrayList<>();
 
         HttpURLConnection connection;
         InputStream in = null;
 
-        try {
-            connection = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage(), page);
-            stethoManager.preConnect(connection, null);
-            connection.connect();
-            stethoManager.postConnect();
+        for (int pageNumber = 1; pageNumber <= page; pageNumber++) {
+            final StethoURLConnectionManager stethoManager = new StethoURLConnectionManager("API");
+            try {
+                connection = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage(), pageNumber);
+                stethoManager.preConnect(connection, null);
+                connection.connect();
+                stethoManager.postConnect();
 
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                in = connection.getInputStream();
-                in = stethoManager.interpretResponseStream(in);
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    in = connection.getInputStream();
+                    in = stethoManager.interpretResponseStream(in);
 
-                data = MoviesParser.parseMovies(in);
+                    data.addAll(MoviesParser.parseMovies(in));
 
-                resultType = ResultType.OK;
-            } else {
-                throw new BadResponseException("HTTP: " + connection.getResponseCode());
-            }
-
-        } catch (BadResponseException | JSONException e) {
-            Log.e(TAG, "Failed to get movies", e);
-        } catch (IOException e) {
-            stethoManager.httpExchangeFailed(e);
-            if (IOUtils.isConnectionAvailable(getContext(), false)) {
-                resultType = ResultType.ERROR;
-            } else {
-                resultType = ResultType.NO_INTERNET;
+                    resultType = ResultType.OK;
+                } else {
+                    throw new BadResponseException("HTTP: " + connection.getResponseCode());
+                }
+            } catch (BadResponseException | JSONException e) {
+                Log.e(TAG, "Failed to get movies", e);
+            } catch (IOException e) {
+                stethoManager.httpExchangeFailed(e);
+                if (IOUtils.isConnectionAvailable(getContext(), false)) {
+                    resultType = ResultType.ERROR;
+                } else {
+                    resultType = ResultType.NO_INTERNET;
+                }
             }
         }
+
 
         return new LoadResult<>(resultType, data);
     }
