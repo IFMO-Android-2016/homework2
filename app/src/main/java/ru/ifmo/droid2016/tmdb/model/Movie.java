@@ -1,46 +1,56 @@
 package ru.ifmo.droid2016.tmdb.model;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
- * Информация о фильме, полученная из The Movie DB API
+ * Primary Movie Info from The Movie DB API
  */
 
 public class Movie {
+    /**
+     * Localized movie's title
+     */
+    public final
+    @NonNull
+    String title;
 
     /**
-     * Path изображения постера фильма. Как из Path получить URL, описано здесь:
-     *
-     * https://developers.themoviedb.org/3/getting-started/languages
-     *
-     * В рамках ДЗ можно не выполнять отдельный запрос /configuration, а использовать
-     * базовый URL для картинок: http://image.tmdb.org/t/p/ и
+     * Original movie's title
      */
-    public final @NonNull String posterPath;
+    public final
+    @NonNull
+    String originalTitle;
 
     /**
-     * Название фильма на языке оригинала.
+     * Poster Path (2/3 aspect ratio image-poster)
      */
-    public final @NonNull String originalTitle;
+    public final
+    @NonNull
+    String poster;
 
     /**
-     * Описание фильма на языке пользователя.
+     * Localized movie's description
      */
-    public final @Nullable String overviewText;
+    public final
+    @NonNull
+    String overview;
 
     /**
-     * Название фильма на языке пользователя.
+     * Average movie's vote rating
      */
-    public final @Nullable String localizedTitle;
+    public final
+    @NonNull
+    Double rating;
 
-    public Movie(String posterPath,
-                 String originalTitle,
-                 String overviewText,
-                 String localizedTitle) {
-        this.posterPath = posterPath;
+    public Movie(@NonNull String title,
+                 @NonNull String originalTitle,
+                 @NonNull String overview,
+                 @NonNull String poster,
+                 @NonNull Double rating) {
+        this.title = title;
         this.originalTitle = originalTitle;
-        this.overviewText = overviewText;
-        this.localizedTitle = localizedTitle;
+        this.overview = overview;
+        this.poster = "https://image.tmdb.org/t/p/w500" + poster;
+        this.rating = rating;
     }
 }
