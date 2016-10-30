@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TMDB Demo</string>
+
+    <string name="cameras_not_found">Фильмы не найдены</string>
+    <string name="error">Ошибка</string>
+    <string name="no_inernet">Остутствует соединение</string>
 </resources>
