@@ -7,48 +7,50 @@ import android.support.annotation.NonNull;
  */
 
 public class Movie {
-
-    /**
-     * Poster Path (2/3 aspect ratio image-poster)
-     */
-    public final @NonNull String posterPath;
-
-    /**
-     * Backdrop Path (16/9 aspect ratio image-backdrop)
-     */
-    public final @NonNull String backdropPath;
-
     /**
      * Localized movie's title
      */
-    public final @NonNull String title;
+    public final
+    @NonNull
+    String title;
 
     /**
      * Original movie's title
      */
-    public final @NonNull String originalTitle;
+    public final
+    @NonNull
+    String originalTitle;
+
+    /**
+     * Poster Path (2/3 aspect ratio image-poster)
+     */
+    public final
+    @NonNull
+    String poster;
 
     /**
      * Localized movie's description
      */
-    public final @NonNull String overview;
+    public final
+    @NonNull
+    String overview;
 
     /**
      * Average movie's vote rating
      */
-    public final @NonNull String voteAverage;
+    public final
+    @NonNull
+    Double rating;
 
     public Movie(@NonNull String title,
                  @NonNull String originalTitle,
                  @NonNull String overview,
-                 @NonNull String voteAverage,
-                 @NonNull String posterPath,
-                 @NonNull String backdropPath) {
+                 @NonNull String poster,
+                 @NonNull Double rating) {
         this.title = title;
         this.originalTitle = originalTitle;
         this.overview = overview;
-        this.voteAverage = voteAverage;
-        this.posterPath = "https://image.tmdb.org/t/p/w500" + posterPath;
-        this.backdropPath = "https://image.tmdb.org/t/p/w500" + backdropPath;
+        this.poster = "https://image.tmdb.org/t/p/w500" + poster;
+        this.rating = rating;
     }
 }

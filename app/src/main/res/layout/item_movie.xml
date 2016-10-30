@@ -13,19 +13,19 @@
         android:padding="@dimen/movieMarginPrimary">
 
         <LinearLayout
-            android:id="@+id/vote_average_container"
+            android:id="@+id/rating_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:background="@color/movieVoteAverageGray"
+            android:background="@color/movieRatingGray"
             android:paddingBottom="@dimen/movieVoteAverageMarginVertical"
             android:paddingLeft="@dimen/movieVoteAverageMarginHorizontal"
             android:paddingRight="@dimen/movieVoteAverageMarginHorizontal"
             android:paddingTop="@dimen/movieVoteAverageMarginVertical">
 
             <TextView
-                android:id="@+id/vote_average"
+                android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
@@ -40,7 +40,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/movieMarginPrimary"
-            android:layout_toLeftOf="@id/vote_average_container"
+            android:layout_toLeftOf="@id/rating_container"
             android:textColor="#404040"
             android:textSize="20sp"
             android:textStyle="bold" />

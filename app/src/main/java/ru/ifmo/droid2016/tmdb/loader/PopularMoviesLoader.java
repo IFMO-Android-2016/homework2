@@ -16,7 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,15 +25,32 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
-    private static final String TAG = "Popular Movies";
+    private static final String TAG = "LOADER";
+
+    private int page;
+    private String locale;
+
+    private LoadResult<List<Movie>> result;
 
     public PopularMoviesLoader(Context context) {
+        this(context, 1);
+    }
+
+    public PopularMoviesLoader(Context context, int page) {
         super(context);
+
+        this.page = page;
+        this.locale = Locale.getDefault().getLanguage();
+        this.result = null;
     }
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        if (result != null && result.resultType == ResultType.OK) {
+            deliverResult(result);
+        } else {
+            forceLoad();
+        }
     }
 
     @Override
@@ -46,20 +62,20 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
         HttpURLConnection connection = null;
 
         try {
-            connection = TmdbApi.getPopularMovies(Locale.getDefault().getLanguage());
-            Log.d(TAG, "Performing request: " + connection.getURL());
-
+            connection = TmdbApi.getPopularMovies(page, locale);
             connection.setConnectTimeout(15000); // 15 sec
             connection.setReadTimeout(15000); // 15 sec
+
+            Log.d(TAG, "Performing request: " + connection.getURL());
 
             stethoManager.preConnect(connection, null);
             connection.connect();
             stethoManager.postConnect();
 
             if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
+                resultType = ResultType.OK;
                 data = Parser.parse(
                         stethoManager.interpretResponseStream(connection.getInputStream()));
-                resultType = ResultType.OK;
             } else {
                 throw new BadResponseException("HTTP: " + connection.getResponseCode()
                         + ", " + connection.getResponseMessage());
@@ -69,7 +85,7 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
 
             if (!IOUtils.isConnectionAvailable(getContext(), false)) {
                 resultType = ResultType.NO_INTERNET;
-                Log.e(TAG, "Failed to get popular movies: internet connection is not available", e);
+                Log.w(TAG, "Failed to get popular movies: internet connection is not available", e);
             }
         } catch (Exception e) {
             Log.e(TAG, "Failed to get popular movies: unexpected error", e);
@@ -79,7 +95,8 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
             }
         }
 
-        return new LoadResult<>(resultType, data);
+        this.result = new LoadResult<>(resultType, data);
+        return result;
     }
 
     private static class Parser {
@@ -116,9 +133,8 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
                         movie.getString("title"),
                         movie.getString("original_title"),
                         movie.getString("overview"),
-                        movie.getString("vote_average"),
                         movie.getString("poster_path"),
-                        movie.getString("backdrop_path")
+                        movie.getDouble("vote_average")
                 ));
             }
 

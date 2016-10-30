@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Методы для работы с The Movie DB API
+ * The Movie DB API methods
  *
  * https://www.themoviedb.org/documentation/api
  */
@@ -15,11 +15,13 @@ public final class TmdbApi {
 
     // TODO: Зарегистрироваться на https://www.themoviedb.org и получить свой собственный ключ
     private static final String API_KEY = "ee1c42c80c58d28bc54efc844b63d114";
-
     private static final Uri BASE_URI = Uri.parse("https://api.themoviedb.org/3");
 
     private TmdbApi() {}
 
+    /**
+     * Returns {@link android.net.Uri.Builder} with default request values
+     */
     private static Uri.Builder getUriBuilder() {
         return BASE_URI
                 .buildUpon()
@@ -27,16 +29,17 @@ public final class TmdbApi {
     }
 
     /**
-     * Возвращает {@link HttpURLConnection} для выполнения запроса популярных фильмов
-     *
+     * Returns {@link HttpURLConnection} for perform a "Popular Movies" request
      * https://developers.themoviedb.org/3/movies/get-popular-movies
      *
-     * @param lang язык пользователя
+     * @param page page to be loaded
+     * @param lang language, in which to return the titles and descriptions of the movies
      */
-    public static HttpURLConnection getPopularMovies(String lang) throws IOException {
+    public static HttpURLConnection getPopularMovies(int page, String lang) throws IOException {
         Uri uri = getUriBuilder()
                 .appendPath("movie")
                 .appendPath("popular")
+                .appendQueryParameter("page", String.valueOf(page))
                 .appendQueryParameter("language", lang)
                 .build();
 
