@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,26 +27,67 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.PersonViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     final List<Movie> movies;
-
-    public RecyclerViewAdapter(List<Movie> movies) {
+    private OnLoadMore loader;
+    private boolean loaded;
+    private int visibleThreshold = 3;
+    public RecyclerViewAdapter(List<Movie> movies, RecyclerView recyclerView) {
         this.movies = movies;
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
+                .getLayoutManager();
+        loaded = false;
+
+        recyclerView
+                .addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView,
+                                           int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+
+                        int totalItemCount = linearLayoutManager.getItemCount();
+                        int lastVisibleItem = linearLayoutManager
+                                .findLastVisibleItemPosition();
+                        if (loaded
+                                && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                            if (loader != null) {
+                                loader.onLoadMore();
+                            }
+                            loaded = false;
+                        }
+                    }
+                });
     }
 
     @Override
-    public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.film_card, parent, false);
-        PersonViewHolder ps = new PersonViewHolder(v);
-        return ps;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == 1) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.film_card, parent, false);
+            return new PersonViewHolder(v);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.progres_bar, parent, false);
+            return new ProgressViewHolder(v);
+        }
     }
 
     @Override
-    public void onBindViewHolder(PersonViewHolder holder, int position) {
-        holder.image.setImageURI(movies.get(position).posterPath);
-        holder.title.setText(movies.get(position).localizedTitle);
-        holder.discribe.setText(movies.get(position).overviewText);
+    public int getItemViewType(int position) {
+
+        return movies.get(position) == null ? 0 : 1;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof PersonViewHolder) {
+            PersonViewHolder vw = (PersonViewHolder) holder;
+            vw.image.setImageURI(movies.get(position).posterPath);
+            vw.title.setText(movies.get(position).localizedTitle);
+            vw.discribe.setText(movies.get(position).overviewText);
+        } else {
+            ProgressViewHolder v = (ProgressViewHolder) holder;
+            v.progressBar.setIndeterminate(true);
+        }
     }
 
     @Override
@@ -59,16 +101,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    public void onLoadNewItems(OnLoadMore loader) {
+        this.loader = loader;
+    }
+
+    public void setLoaded() {
+        this.loaded = true;
+    }
+
     class PersonViewHolder extends RecyclerView.ViewHolder {
-        SimpleDraweeView image;
-        TextView title;
-        TextView discribe;
+        final SimpleDraweeView image;
+        final TextView title;
+        final TextView discribe;
 
         public PersonViewHolder(View itemView) {
             super(itemView);
             image = (SimpleDraweeView) itemView.findViewById(R.id.poster);
             title = (TextView) itemView.findViewById(R.id.title);
             discribe = (TextView) itemView.findViewById(R.id.discribe);
+        }
+    }
+
+    class ProgressViewHolder extends RecyclerView.ViewHolder {
+        final ProgressBar progressBar;
+        public ProgressViewHolder(View itemView) {
+            super(itemView);
+            this.progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
         }
     }
 }
