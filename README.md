@@ -1,5 +1,11 @@
 # Домашнее задание №2
 
+### Скриншоты
+<img alt="TMDB demo main activity" src="https://pp.vk.me/c636919/v636919212/348d3/PgH45aWK2FE.jpg" height="178px">
+<img alt="main activity detect change language" src="https://pp.vk.me/c636919/v636919212/348f8/x8MWTzb_byY.jpg" height="178px">
+<img alt="AlertDialog detect no internet connection" src="https://pp.vk.me/c636919/v636919212/348e6/w22hL2w3oDw.jpg" width="300px" height="187px">
+<img alt="Trairel video" src="https://pp.vk.me/c636919/v636919212/348dd/bz41BsQhWYU.jpg" width="300px" height="187px">
+
 ## Цель
 
 Написать приложение, состоящее из одного экрана со списком популярных фильмов, используя The Movie DB API [https://www.themoviedb.org/](https://www.themoviedb.org/). Документация по API доступна здесь: [https://developers.themoviedb.org/3/getting-started](https://developers.themoviedb.org/3/getting-started). Принцип работы приложения повторяет рассмотренное на практике приложение со списков веб-камер ([https://github.com/IFMO-Android-2016/practice2](https://github.com/IFMO-Android-2016/practice2)). Основные идеи, которые надо реализовать в этом приложении в целом повторяют идеи из практики:
