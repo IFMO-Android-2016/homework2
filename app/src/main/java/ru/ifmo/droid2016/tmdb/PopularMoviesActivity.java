@@ -6,23 +6,28 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.InputStream;
+import java.util.List;
+
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
+import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.loader.PopularMoviesLoader;
+import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 /**
  * Экран, отображающий список популярных фильмов из The Movie DB.
  */
 public class PopularMoviesActivity extends AppCompatActivity
-implements LoaderManager.LoaderCallbacks<String> {
+implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
     private final String LOG_TAG = "my_tag";
 
     private final String LANG = "LANG";
     private Bundle mBundle;
-    private Loader<String> mLoader;
+    private Loader<LoadResult<List<Movie>>> mLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +42,8 @@ implements LoaderManager.LoaderCallbacks<String> {
         mLoader.onContentChanged();
     }
 
-    public Loader<String> onCreateLoader(int id, Bundle args) {
-        Loader<String> mLoader = null;
+    public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
+        Loader<LoadResult<List<Movie>>> mLoader = null;
 
         Log.d(LOG_TAG, "starting ###");
 
@@ -48,12 +53,13 @@ implements LoaderManager.LoaderCallbacks<String> {
     }
 
 
-    public void onLoaderReset(Loader<String> loader) {
+    public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
         Log.d(LOG_TAG, "onLoaderReset");
     }
 
-    public void onLoadFinished(Loader<String> loader, String rez) {
-        Log.d(LOG_TAG, "rez : " + rez);
+    public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> rez) {
+        Log.d(LOG_TAG, "rez : " + rez.resultType);
+
     }
 
 }

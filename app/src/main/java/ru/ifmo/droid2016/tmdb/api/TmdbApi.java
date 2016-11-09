@@ -1,22 +1,13 @@
 package ru.ifmo.droid2016.tmdb.api;
 
-import android.content.AsyncTaskLoader;
-import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 import javax.net.ssl.HttpsURLConnection;
-
-import ru.ifmo.droid2016.tmdb.utils.IOUtils;
-
-import static java.util.Locale.US;
 
 /**
  * Методы для работы с The Movie DB API
@@ -42,19 +33,16 @@ public final class TmdbApi {
      * @param lang язык пользователя
      */
     public static HttpsURLConnection getPopularMoviesRequest(int pageId, String lang) throws IOException {
-        // DONE
-        String uri = "@@@";
+        Uri uri = BASE_URI.buildUpon()
+                .appendPath("movie")
+                .appendPath("popular")
+                .appendQueryParameter("api_key", API_KEY)
+                .appendQueryParameter("language", lang)
+                .appendQueryParameter("padge", String.valueOf(pageId))
+                .build();
 
-        try {
-            uri = BASE_URI + "/movie/popular" + "?api_key=" + API_KEY + "&language=" + lang + "&page=" + String.valueOf(pageId);
-
-        } catch (Exception ex) {
-            Log.d("???", ex.toString());
-        }
-
-        Log.d("final_uri", uri);
-
-        return (HttpsURLConnection) new URL(uri).openConnection();
+        Log.d("final_uri", uri.toString());
+        return (HttpsURLConnection) new URL(uri.toString()).openConnection();
     }
 
 }

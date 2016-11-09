@@ -8,15 +8,15 @@ import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
+import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
-
-public class PopularMoviesLoader extends AsyncTaskLoader<String> {
+public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     private final String LOG_TAG = "my_tag";
 
     private int pageId;
@@ -49,7 +49,7 @@ public class PopularMoviesLoader extends AsyncTaskLoader<String> {
     }
 
     @Override
-    public String loadInBackground() {
+    public LoadResult<List<Movie>> loadInBackground() {
         Log.d(LOG_TAG, " loadInBackground");
 
         HttpsURLConnection connection;
@@ -57,9 +57,9 @@ public class PopularMoviesLoader extends AsyncTaskLoader<String> {
             connection = TmdbApi.getPopularMoviesRequest(pageId, language);
         } catch (Exception ex) {
             Log.d(LOG_TAG, "Error getPopularMoviesRequest\n");
-            return "Error";
+            return new LoadResult(ResultType.ERROR, null);
         }
-        String rez = "";
+        LoadResult<List<Movie>> rez = null;
 
 
         Log.d(LOG_TAG, " connection " + String.valueOf(IOUtils.isConnectionAvailable(appContext, false)));
@@ -72,9 +72,9 @@ public class PopularMoviesLoader extends AsyncTaskLoader<String> {
 
         try {
             Log.d(LOG_TAG, "  start");
-            InputStream in = new BufferedInputStream(connection.getInputStream());
-            Log.d(LOG_TAG, "  #");
-            rez = IOUtils.readToString(in, "UTF-8");
+
+            rez = GetPopularPullParser.parse(new BufferedInputStream(connection.getInputStream()));
+
             Log.d(LOG_TAG, "OK_connection");
         } catch (Exception ex) {
 
@@ -85,13 +85,12 @@ public class PopularMoviesLoader extends AsyncTaskLoader<String> {
             connection.disconnect();
         }
         /**/
-        return rez;
+        return new LoadResult(ResultType.OK, rez);
     }
 
     @Override
-    public void deliverResult(String rez) {
+    public void deliverResult(LoadResult<List<Movie>> rez) {
         Log.d("deliverResult", "-");
         super.deliverResult(rez);
     }
-
 }
