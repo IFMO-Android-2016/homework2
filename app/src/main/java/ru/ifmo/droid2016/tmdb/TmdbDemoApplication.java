@@ -13,4 +13,7 @@ public class TmdbDemoApplication extends Application {
         Stetho.initializeWithDefaults(this);
         Fresco.initialize(this);
     }
+
+    //public void download
+
 }
