@@ -10,6 +10,11 @@ import android.support.annotation.Nullable;
 public class Movie {
 
     /**
+     * ID фильма в каталоге TMDB.
+     */
+    public final int id;
+
+    /**
      * Path изображения постера фильма. Как из Path получить URL, описано здесь:
      *
      * https://developers.themoviedb.org/3/getting-started/languages
@@ -34,13 +39,33 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
-    public Movie(String posterPath,
-                 String originalTitle,
-                 String overviewText,
-                 String localizedTitle) {
+    /**
+     * Рейтинг фильма.
+     */
+    public final double rating;
+
+    public Movie(int id,
+                 @NonNull String posterPath,
+                 @NonNull String originalTitle,
+                 @Nullable String overviewText,
+                 @Nullable String localizedTitle,
+                 double rating) {
+        this.id = id;
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.rating = rating;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "posterPath='" + posterPath + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", overviewText='" + overviewText + '\'' +
+                ", localizedTitle='" + localizedTitle + '\'' +
+                ", rating='" + rating + '\'' +
+                '}';
     }
 }

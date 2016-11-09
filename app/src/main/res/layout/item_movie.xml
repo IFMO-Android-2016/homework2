@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/movie_about">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/movie_poster"
+            android:layout_width="92dp"
+            android:layout_height="135dp"
+            android:background="#666"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:id="@+id/movie_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@id/movie_poster"
+            android:layout_toEndOf="@id/movie_poster"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:maxLines="4"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:text="Доктор Стрэндж "
+            />
+
+        <TextView
+            android:id="@+id/movie_title_original"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_title"
+            android:layout_toRightOf="@id/movie_poster"
+            android:layout_toEndOf="@id/movie_poster"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:maxLines="4"
+            android:textSize="13sp"
+            android:ellipsize="end"
+            android:text="Doctor Strange (2016)"/>
+
+        <ImageView
+            android:id="@+id/star"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_below="@+id/movie_title_original"
+            android:layout_toRightOf="@+id/movie_poster"
+            android:layout_toEndOf="@+id/movie_poster"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_star" />
+
+        <TextView
+            android:id="@+id/movie_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_below="@id/movie_title_original"
+            android:layout_toRightOf="@id/star"
+            android:layout_toEndOf="@id/star"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="10dp"
+            android:maxLines="1"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="7.0"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/movie_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/movie_about"
+        android:layout_alignLeft="@+id/movie_about"
+        android:layout_alignStart="@+id/movie_about"
+        android:layout_marginTop="12dp"
+        android:textSize="14sp"
+        android:text="Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of "/>
+
+</RelativeLayout>
