@@ -1,22 +1,22 @@
 package ru.ifmo.droid2016.tmdb.loader;
 
-/**
- * Три возможных результат процесса загрузки данных.
- */
 public enum ResultType {
 
-    /**
-     * Данные успешно загружены.
-     */
     OK,
 
-    /**
-     * Данные не загружены из-за отсутствия интернета.
-     */
     NO_INTERNET,
 
-    /**
-     * Данные не загружены по другой причине.
-     */
-    ERROR
+    ERROR;
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case OK:
+                return "Полёт нормальный";
+            case NO_INTERNET:
+                return "Интернет не завезли";
+            default:
+                return "Что-то сломалось";
+        }
+    }
 }
