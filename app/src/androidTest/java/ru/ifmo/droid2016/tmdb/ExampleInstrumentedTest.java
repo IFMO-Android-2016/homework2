@@ -7,6 +7,12 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import ru.ifmo.droid2016.tmdb.loader.MoviesPullParser;
+
 import static org.junit.Assert.*;
 
 /**
@@ -22,5 +28,16 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("ru.ifmo.droid2016.tmdb", appContext.getPackageName());
+    }
+
+    @Test
+    public void testJsonParser() throws Exception {
+        InputStream in = new FileInputStream(new File(
+                "C:\\Users\\romag_000\\AndroidStudioProjects\\homework2\\app\\src\\test\\java\\ru\\ifmo\\droid2016\\tmdb\\response.json"));
+        try {
+            MoviesPullParser.parseMovies(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
