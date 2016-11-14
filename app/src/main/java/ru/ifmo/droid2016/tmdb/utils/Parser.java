@@ -22,8 +22,8 @@ public class Parser {
             reader.nextName();
             reader.beginArray();
             while (reader.hasNext()) {
-                String posterPath, originalTitle, overviewText, localizedTitle;
-                posterPath = originalTitle = overviewText = localizedTitle = "";
+                String posterPath, originalTitle, overviewText, localizedTitle, vote;
+                posterPath = originalTitle = overviewText = localizedTitle = vote = "";
                 reader.beginObject();
                 while (reader.hasNext()) {
                     final String name = reader.nextName();
@@ -36,6 +36,7 @@ public class Parser {
                         case "original_title": originalTitle = reader.nextString(); break;
                         case "overview": overviewText = reader.nextString(); break;
                         case "localized_title": localizedTitle = reader.nextString(); break;
+                        case "vote_average": vote = "" + reader.nextDouble(); break;
                         default: reader.skipValue();
                     }
                 }
@@ -43,7 +44,8 @@ public class Parser {
                 if (localizedTitle.isEmpty()) {
                     localizedTitle = originalTitle;
                 }
-                result.add(new Movie(posterPath, originalTitle, overviewText, localizedTitle));
+                result.add(new Movie(posterPath, originalTitle, overviewText,
+                        localizedTitle, vote));
             }
             reader.endArray();
             reader.nextName();
