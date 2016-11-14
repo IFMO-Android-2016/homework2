@@ -27,9 +27,6 @@ public class Movie {
         return overviewText;
     }
 
-    /**
-     * Название фильма на языке пользователя.
-     */
     private final @Nullable String localizedTitle;
 
     public Movie(@NonNull String posterPath,

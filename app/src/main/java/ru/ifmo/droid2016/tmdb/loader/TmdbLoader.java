@@ -10,6 +10,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -18,7 +19,8 @@ import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
-import static ru.ifmo.droid2016.tmdb.loader.ResultType.*;
+import static ru.ifmo.droid2016.tmdb.loader.ResultType.ERROR;
+import static ru.ifmo.droid2016.tmdb.loader.ResultType.OK;
 
 /**
  * 12 of November
@@ -42,7 +44,7 @@ public class TmdbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
     @Override
     protected void onStartLoading() {
-        Log.i(TAG, "onStartLoading: loaded=" + loaded + "|id=" + getId());
+        Log.i(TAG, "onStartLoading: [loaded=" + loaded + "|id=" + getId() + "|page=" + page + "]");
         if (!loaded)
             forceLoad();
         else
@@ -54,7 +56,7 @@ public class TmdbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     public LoadResult<List<Movie>> loadInBackground() {
         StethoURLConnectionManager stethoManager = new StethoURLConnectionManager(TAG);
         ResultType ans = ERROR;
-        List<Movie> data = null;
+        List<Movie> data = new ArrayList<>();
 
         HttpsURLConnection connection = null;
         InputStream in = null;
@@ -97,9 +99,10 @@ public class TmdbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
                 connection.disconnect();
             }
         }
-        loaded = true;
-        if (ans == OK)
-            listLoadResult = new LoadResult<>(ans, data);
+
+        if (ans == OK) loaded = true;
+
+        listLoadResult = new LoadResult<>(ans, data, page);
         return listLoadResult;
     }
 }

@@ -7,11 +7,11 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,14 +19,15 @@ import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.loader.ResultType;
 import ru.ifmo.droid2016.tmdb.loader.TmdbLoader;
 import ru.ifmo.droid2016.tmdb.model.Movie;
-import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
+import ru.ifmo.droid2016.tmdb.utils.RecyclerDividersDecorator;
 
-import static ru.ifmo.droid2016.tmdb.loader.ResultType.*;
+import static ru.ifmo.droid2016.tmdb.loader.ResultType.ERROR;
+import static ru.ifmo.droid2016.tmdb.loader.ResultType.OK;
+import static ru.ifmo.droid2016.tmdb.utils.Constants.ITEMS_ON_PAGE;
 
 public class PopularMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
     private static final String TAG = "PopularMoviesActivity";
-    private static final int ITEMS_ON_PAGE = 20;
 
     private static String lang = Locale.getDefault().getLanguage();
     private static boolean langChanged = false;
@@ -35,12 +36,14 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
     private RecyclerView recyclerView;
     private ProgressBar progressView;
     private TextView errorTextView;
+    private LinearLayoutManager lm;
 
     @Nullable
     private RecyclerAdapter adapter;
 
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
@@ -51,7 +54,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new RecylcerDividersDecorator(
+
+
+        recyclerView.addItemDecoration(new RecyclerDividersDecorator(
                 getResources().getColor(R.color.divier)));
 
 
@@ -59,21 +64,12 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
 
+        loadLoaders();
     }
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
         return new TmdbLoader(this, lang, ++id);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (adapter != null)
-            adapter.setMovies(new ArrayList<Movie>());
-        //this random sh*t will fix next issue: if onStart launching after (only after)
-        //onRestart it'll call all saved loaders.
-        //guess why?
     }
 
     @Override
@@ -96,15 +92,13 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
             langChanged = true;
             id = 0;
             getSupportLoaderManager().restartLoader(id, null, this);
-
-        } else
-            loadLoaders();
-
+        }
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (lm.findLastVisibleItemPosition() >= ((id + 1) * ITEMS_ON_PAGE) - 3) {
+                if (lm == null)
+                    lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (lm.findLastVisibleItemPosition() >= ((id + 1) * ITEMS_ON_PAGE) - 4) {
                     getSupportLoaderManager().initLoader(++id, null, getCallback());
                 }
             }
@@ -126,8 +120,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> result) {
+        Log.i(TAG, "onLoadFinished: loaderId=" + loader.getId() + " finished");
         if (result.resultType == OK) {
-            display(result.data);
+            display(result);
         } else {
             error(result.resultType);
         }
@@ -138,16 +133,16 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         adapter = null;
     }
 
-    private void display(List<Movie> data) {
-        if (data.isEmpty()) {
+    private void display(LoadResult<List<Movie>> result) {
+        if (result.data.isEmpty()) {
             error(ERROR);
         } else {
             if (adapter == null) {
                 adapter = new RecyclerAdapter(this);
                 recyclerView.setAdapter(adapter);
             }
-            if (langChanged) adapter.setMovies(data);
-            else adapter.addMovies(data);
+            if (langChanged) adapter.setMovies(result);
+            else adapter.addMovies(result);
             langChanged = false;
             progressView.setVisibility(View.GONE);
             errorTextView.setVisibility(View.GONE);

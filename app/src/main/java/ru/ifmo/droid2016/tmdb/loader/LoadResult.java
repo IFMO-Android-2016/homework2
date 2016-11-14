@@ -1,28 +1,20 @@
 package ru.ifmo.droid2016.tmdb.loader;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-/**
- * Результат загрузки данных.
- */
 
 public class LoadResult<T> {
 
-    /**
-     * Чем закончилась загрузка? (ок или не ок)
-     */
     @NonNull
     public final ResultType resultType;
 
-    /**
-     * Загруженные данные (в случае, если resultType == OK) или null.
-     */
-    @Nullable
+    @NonNull
     public final T data;
 
-    LoadResult(@NonNull ResultType resultType, @Nullable T data) {
+    public final int page;
+
+    LoadResult(@NonNull ResultType resultType, @NonNull T data, int page) {
         this.resultType = resultType;
         this.data = data;
+        this.page = page;
     }
 }

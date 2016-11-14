@@ -3,6 +3,7 @@ package ru.ifmo.droid2016.tmdb;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,12 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.model.Movie;
+
+import static ru.ifmo.droid2016.tmdb.utils.Constants.ITEMS_ON_PAGE;
 
 class RecyclerAdapter
         extends RecyclerView.Adapter<RecyclerAdapter.MovieViewHolder> {
@@ -21,14 +24,20 @@ class RecyclerAdapter
     private final LayoutInflater layoutInflater;
 
     @NonNull
-    private ArrayList<Movie> movies = new ArrayList<>();
+    private SparseArray<List<Movie>> movies;
+
 
     RecyclerAdapter(Context context) {
+        this.movies = new SparseArray<>();
         this.layoutInflater = LayoutInflater.from(context);
     }
 
-    void addMovies(@NonNull List<Movie> movies) {
-        this.movies.addAll(movies);
+    void addMovies(@NonNull LoadResult<List<Movie>> m) {
+        /*if (movies.get(m.page - 1) != null)
+            adding existing List<Movies>, loaders going wrong".
+            That will not break anything but on wai~ why?
+        */
+        movies.put(m.page - 1, m.data);
         notifyDataSetChanged();
     }
 
@@ -39,7 +48,7 @@ class RecyclerAdapter
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        final Movie movie = movies.get(position);
+        final Movie movie = movies.get(position / ITEMS_ON_PAGE).get(position % ITEMS_ON_PAGE);
         holder.titleView.setText(movie.getLocalizedTitle());
         holder.imageView.setImageURI(movie.getPosterPath());
         holder.descriptionView.setText(movie.getOverviewText());
@@ -47,12 +56,12 @@ class RecyclerAdapter
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return movies.size() * ITEMS_ON_PAGE;
     }
 
-    void setMovies(@NonNull List<Movie> movies) {
-        this.movies = new ArrayList<>();
-        addMovies(movies);
+    void setMovies(@NonNull LoadResult<List<Movie>> tempMovies) {
+        this.movies = new SparseArray<>();
+        addMovies(tempMovies);
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {

@@ -13,12 +13,13 @@ import java.util.ArrayList;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
+import static ru.ifmo.droid2016.tmdb.utils.Constants.IMAGE_BASE_URL;
+
 /**
  * 12 of November
  */
 
 class MoviesDomParser {
-    private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w300";
     @NonNull
     static ArrayList<Movie> parseMovies(InputStream in) throws JSONException, IOException {
 
