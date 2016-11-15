@@ -1,19 +1,21 @@
 package ru.ifmo.droid2016.tmdb;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import ru.ifmo.droid2016.tmdb.loader.MoviesPullParser;
+import ru.ifmo.droid2016.tmdb.model.Movie;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static ru.ifmo.droid2016.tmdb.R.raw.response;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -32,12 +34,14 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void testJsonParser() throws Exception {
-        InputStream in = new FileInputStream(new File(
-                "C:\\Users\\romag_000\\AndroidStudioProjects\\homework2\\app\\src\\test\\java\\ru\\ifmo\\droid2016\\tmdb\\response.json"));
-        try {
-            MoviesPullParser.parseMovies(in);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+        InputStream in = resources.openRawResource(response);
+
+        List<Movie> movies = MoviesPullParser.parseMovies(in);
+        for (Movie m : movies) {
+            System.out.println(String.format("%s %s %s %s", m.posterPath, m.originalTitle,
+                    m.overviewText, m.localizedTitle));
         }
     }
 }

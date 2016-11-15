@@ -25,10 +25,14 @@ public class MoviesPullParser {
         List<Movie> movies = null;
         try {
             reader.beginObject();
-            if (reader.nextName().equals("page"))
-                reader.skipValue();
-            if (reader.nextName().equals("result")) {
-                movies = parseMoviesArray(reader);
+            String curName;
+            while (reader.hasNext()) {
+                curName = reader.nextName();
+                if (curName.equals("results")) {
+                    movies = parseMoviesArray(reader);
+                } else {
+                    reader.skipValue();
+                }
             }
             reader.endObject();
         } finally {
@@ -46,7 +50,7 @@ public class MoviesPullParser {
                 posterPath = reader.nextString();
             else if (key.equals("original_title") && reader.peek() != JsonToken.NULL)
                 originalTitle = reader.nextString();
-            else if (key.equals("overview_text"))
+            else if (key.equals("overview"))
                 overviewText = reader.nextString();
             else if (key.equals("title"))
                 title = reader.nextString();
