@@ -38,7 +38,7 @@ public class Movie {
                  String originalTitle,
                  String overviewText,
                  String localizedTitle) {
-        this.posterPath = posterPath;
+        this.posterPath = "https://image.tmdb.org/t/p/w500" + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
