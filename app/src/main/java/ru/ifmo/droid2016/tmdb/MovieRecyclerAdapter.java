@@ -19,13 +19,13 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 public class MovieRecyclerAdapter
         extends RecyclerView.Adapter<MovieRecyclerAdapter.MovieViewHolder> {
 
-    private final Context context;
+//    private final Context context;
     private final LayoutInflater layoutInflater;
 
     private List<Movie> movies = Collections.emptyList();
 
     public MovieRecyclerAdapter(Context context) {
-        this.context = context;
+//        this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
@@ -61,7 +61,7 @@ public class MovieRecyclerAdapter
         final TextView voteView;
         final SimpleDraweeView draweeView;
 
-        public MovieViewHolder(View itemView) {
+        private MovieViewHolder(View itemView) {
             super(itemView);
             titleView = (TextView) itemView.findViewById(R.id.movie_title);
             overviewView = (TextView) itemView.findViewById(R.id.movie_overview);
