@@ -30,7 +30,6 @@ public final class TmdbApi {
      * @param lang язык пользователя
      */
     public static HttpURLConnection getPopularMoviesRequest(int page, String lang) throws IOException {
-        //https://api.themoviedb.org/3/movie/popular?api_key=ee1c42c80c58d28bc54efc844b63d114&language=en-US&page=1
         Uri uri = BASE_URI.buildUpon()
                 .appendPath("movie")
                 .appendPath("popular")

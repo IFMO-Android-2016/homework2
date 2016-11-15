@@ -1,6 +1,5 @@
 package ru.ifmo.droid2016.tmdb;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,6 +22,7 @@ import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.loader.MoviesLoader;
 import ru.ifmo.droid2016.tmdb.loader.ResultType;
 import ru.ifmo.droid2016.tmdb.model.Movie;
+import ru.ifmo.droid2016.tmdb.utils.MoviesData;
 import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 
 /**
@@ -158,6 +157,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putString("language", language);
         outState.putInt("page", page);
     }
