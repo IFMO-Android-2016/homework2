@@ -1,6 +1,5 @@
 package ru.ifmo.droid2016.tmdb;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -12,8 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -53,8 +50,14 @@ public class PopularMoviesActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recycler.clearOnScrollListeners();
+    }
+
+    @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        return new MoviesLoader(this);
+        return new MoviesLoader(this, id);
     }
 
     @Override
@@ -64,8 +67,11 @@ public class PopularMoviesActivity extends AppCompatActivity
             if (adapter == null) {
                 adapter = new MovieRecyclerAdapter(this);
                 recycler.setAdapter(adapter);
+                recycler.addOnScrollListener(
+                        new EndlessScrollListener(
+                                getSupportLoaderManager(), adapter, this));
             }
-            adapter.setMovies(data.data);
+            adapter.addMovies(data.data);
             recycler.setVisibility(View.VISIBLE);
         } else {
             showError(data.resultType);

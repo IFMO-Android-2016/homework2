@@ -21,6 +21,7 @@ public class MovieRecyclerAdapter
 
 //    private final Context context;
     private final LayoutInflater layoutInflater;
+    private int lastVisibleItemNumber;
 
     private List<Movie> movies = Collections.emptyList();
 
@@ -29,8 +30,16 @@ public class MovieRecyclerAdapter
         this.layoutInflater = LayoutInflater.from(context);
     }
 
-    public void setMovies(List<Movie> movies) {
+    private void setMovies(List<Movie> movies) {
         this.movies = movies;
+    }
+
+    public void addMovies(List<Movie> nextMovies) {
+        if (movies.size() == 0) {
+            setMovies(nextMovies);
+        } else {
+            movies.addAll(nextMovies);
+        }
         notifyDataSetChanged();
     }
 
@@ -47,11 +56,17 @@ public class MovieRecyclerAdapter
         holder.voteView.setText(movie.vote);
         Uri uri = TmdbApi.getPosterUri(movie);
         holder.draweeView.setImageURI(uri);
+        holder.getAdapterPosition();
+        lastVisibleItemNumber = Math.max(lastVisibleItemNumber, holder.getAdapterPosition());
     }
 
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+    public int getLastVisibleItemNumber() {
+        return lastVisibleItemNumber;
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {

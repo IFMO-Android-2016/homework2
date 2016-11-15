@@ -16,8 +16,11 @@ import ru.ifmo.droid2016.tmdb.utils.Parser;
 
 public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
-    public MoviesLoader(Context context) {
+    private int page;
+
+    public MoviesLoader(Context context, int page) {
         super(context);
+        this.page = page;
     }
 
     protected void onStartLoading() {
@@ -31,7 +34,7 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
         }
         HttpURLConnection conn = null;
         try {
-            conn = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage());
+            conn = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage(), page);
             List<Movie> result = Parser.parse(conn.getInputStream());
             conn.disconnect();
             return new LoadResult<>(ResultType.OK, result);
