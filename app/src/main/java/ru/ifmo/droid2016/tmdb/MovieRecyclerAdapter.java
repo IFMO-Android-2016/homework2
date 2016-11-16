@@ -19,19 +19,18 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 public class MovieRecyclerAdapter
         extends RecyclerView.Adapter<MovieRecyclerAdapter.MovieViewHolder> {
 
-//    private final Context context;
     private final LayoutInflater layoutInflater;
-    private int lastVisibleItemNumber;
+    private int lastVisibleItemNumber, currentPosition;
 
     private List<Movie> movies = Collections.emptyList();
 
     public MovieRecyclerAdapter(Context context) {
-//        this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
-    private void setMovies(List<Movie> movies) {
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
+        notifyDataSetChanged();
     }
 
     public void addMovies(List<Movie> nextMovies) {
@@ -51,13 +50,14 @@ public class MovieRecyclerAdapter
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         final Movie movie = movies.get(position);
-        holder.titleView.setText(movie.originalTitle);
+        holder.titleView.setText(movie.localizedTitle);
         holder.overviewView.setText(movie.overviewText);
         holder.voteView.setText(movie.vote);
         Uri uri = TmdbApi.getPosterUri(movie);
         holder.draweeView.setImageURI(uri);
         holder.getAdapterPosition();
         lastVisibleItemNumber = Math.max(lastVisibleItemNumber, holder.getAdapterPosition());
+        currentPosition = holder.getAdapterPosition();
     }
 
     @Override
@@ -67,6 +67,10 @@ public class MovieRecyclerAdapter
 
     public int getLastVisibleItemNumber() {
         return lastVisibleItemNumber;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {

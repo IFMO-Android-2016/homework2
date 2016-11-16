@@ -35,7 +35,7 @@ public class Parser {
                         case "poster_path": posterPath = reader.nextString(); break;
                         case "original_title": originalTitle = reader.nextString(); break;
                         case "overview": overviewText = reader.nextString(); break;
-                        case "localized_title": localizedTitle = reader.nextString(); break;
+                        case "title": localizedTitle = reader.nextString(); break;
                         case "vote_average": vote = "" + reader.nextDouble(); break;
                         default: reader.skipValue();
                     }
