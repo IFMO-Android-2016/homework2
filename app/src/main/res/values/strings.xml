@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TMDB Demo</string>
+    <string name="image_height">450dp</string>
+    <string name="image_width">300dp</string>
+    <string name="connection">No Internet connection!</string>
+    <string name="error">Error!</string>
+    <string name="not_found">Movies not found!</string>
 </resources>
