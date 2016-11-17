@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="@dimen/width_size"
+        android:layout_height="wrap_content"
+        android:id="@id/movie_image"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@id/movie_title"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/movie_image"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@id/movie_loctitle"
+        android:gravity="center"
+        android:layout_below="@id/movie_title"
+        android:layout_toRightOf="@id/movie_image"
+        android:textSize="25sp"
+        android:textStyle="italic"
+        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@id/movie_overview"
+        android:layout_below="@id/movie_loctitle"
+        android:layout_toRightOf="@id/movie_image"
+        android:textSize="16sp"
+        android:layout_centerVertical="true"
+        />
+</RelativeLayout>

@@ -60,12 +60,16 @@ public final class IOUtils {
      * @return Есть ли сейчас живое соединение?
      */
     public static boolean isConnectionAvailable(@NonNull Context context, boolean defaultValue) {
+//        System.out.println("Here\n");
         final ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        System.out.println("Yeeees " + connectivityManager);
         if (connectivityManager == null) {
             return defaultValue;
         }
+//        System.out.println("Yeeees1");
         final NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+//        System.out.println("Yeeees2 " + ni);
         return ni != null && ni.isConnected();
     }
 
