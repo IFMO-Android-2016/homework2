@@ -21,18 +21,20 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     public MoviesLoader(Context context) {
         super(context);
     }
+    List <Movie> ans = null;
+    ResultType res = ResultType.ERROR;
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        if (ans != null)
+            deliverResult(new LoadResult<>(res, ans));
+        else
+            forceLoad();
     }
 
     @Override
     public LoadResult<List<Movie>> loadInBackground() {
         StethoURLConnectionManager manager = new StethoURLConnectionManager("API");
-
-        ResultType res = ResultType.ERROR;
-        List <Movie> ans = null;
         HttpURLConnection con = null;
         InputStream in = null;
 
