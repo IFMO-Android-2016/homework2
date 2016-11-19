@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.ifmo.droid2016.tmdb.R;
@@ -23,11 +23,17 @@ public class MoviesRecyclerAdapter
     private final LayoutInflater layoutInflater;
 
     @NonNull
-    private List<Movie> movies = Collections.EMPTY_LIST;
+    private List<Movie> movies;
 
     public MoviesRecyclerAdapter(Context context) {
+        movies = new ArrayList<>();
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
+    }
+
+    public void addMovies(@NonNull List<Movie> movies) {
+        this.movies.addAll(movies);
+        notifyDataSetChanged();
     }
 
     public void setMovies(@NonNull List<Movie> movies) {
@@ -53,6 +59,7 @@ public class MoviesRecyclerAdapter
     public int getItemCount() {
         return movies.size();
     }
+
 
     static class MoviesViewHolder extends RecyclerView.ViewHolder {
 

@@ -27,15 +27,21 @@ import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 public class PopularMoviesActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
+    private static final String FIRSTLOAD = "FIRSTLOAD";
+    private static final String LOADMORE = "LOADMORE";
+    private static final String LANGUAGE = "LANGUAGE";
+
     ProgressBar progressView;
     TextView errorTextView;
     RecyclerView recyclerView;
+    private String language = null;
 
     @Nullable
-    private MoviesRecyclerAdapter adapter;
+    private MoviesRecyclerAdapter adapter = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d("Activity####", "OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
 
@@ -45,30 +51,47 @@ public class PopularMoviesActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(
                 new RecylcerDividersDecorator(getResources().getColor(R.color.gray_a)));
+        if (adapter == null) {
+            Log.d("Activity", "New adapter");
+            adapter = new MoviesRecyclerAdapter(this);
+            recyclerView.setAdapter(adapter);
+        }
+
+        String currentLang = getResources().getConfiguration().locale.getLanguage();
+        Log.d("ACtivity###CurrentLang", currentLang);
 
         progressView.setVisibility(View.VISIBLE);
         errorTextView.setVisibility(View.VISIBLE);
         errorTextView.setText("Происходит загрузка данных");
         recyclerView.setVisibility(View.GONE);
-        final Bundle loaderArgs = getIntent().getExtras();
+
+        final Bundle loaderArgs = new Bundle();
+        language = currentLang;
+        Log.d("Language", language);
+        loaderArgs.putString(LANGUAGE, language);
         getSupportLoaderManager().initLoader(0, loaderArgs, this);
-//        recyclerView.computeScroll();
     }
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        Log.d("Loader", "Created");
-        return new MoviePostersLoader(this);
+        Log.d("Loader#####", "Created");
+        return new MoviePostersLoader(this, new int[]{1}, args.getString(LANGUAGE));
     }
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> data) {
-        if (data.resultType == ResultType.OK) {
-            if (data.data != null && !data.data.isEmpty()) {
-                displayNonEmptyData(data.data);
-            } else {
-                displayEmptyData();
+        Log.d("Loader#####", "Finish");
+        assert data.data != null;
+        assert adapter != null;
+        Log.d("Adapter size", String.valueOf(adapter.getItemCount()));
+        if ((data.resultType == ResultType.OK && data.data.size() != 0) || adapter.getItemCount() != 0) {
+            if (data.data.size() != 0) {
+                adapter.setMovies(data.data);
             }
+            if (adapter.getItemCount() == 0)
+                displayEmptyData();
+            else
+                displayNonEmptyData();
         } else {
             displayError(data.resultType);
         }
@@ -76,6 +99,7 @@ public class PopularMoviesActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
+        Log.d("Loader#####", "Reset");
         displayEmptyData();
     }
 
@@ -88,12 +112,7 @@ public class PopularMoviesActivity extends AppCompatActivity
     }
 
 
-    private void displayNonEmptyData(List<Movie> movies) {
-        if (adapter == null) {
-            adapter = new MoviesRecyclerAdapter(this);
-            recyclerView.setAdapter(adapter);
-        }
-        adapter.setMovies(movies);
+    private void displayNonEmptyData() {
         progressView.setVisibility(View.GONE);
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
