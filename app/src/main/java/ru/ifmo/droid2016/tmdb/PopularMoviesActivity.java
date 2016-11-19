@@ -44,6 +44,7 @@ public class PopularMoviesActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
         recycler = (RecyclerView) findViewById(R.id.recycler);
@@ -85,6 +86,15 @@ public class PopularMoviesActivity extends AppCompatActivity
         }
     }
 
+    public void onResume() {
+        super.onResume();
+//        System.out.println("onResume");
+        Bundle args = new Bundle();
+        args.putIntArray(PAGES, new int[]{0});
+        args.putInt(REQUEST_TYPE, RequestType.LOAD_MORE);
+        getSupportLoaderManager().initLoader(0, args, this);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
@@ -115,11 +125,13 @@ public class PopularMoviesActivity extends AppCompatActivity
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
+//        System.out.println("onCreateLoader");
         return new MoviesLoader(this, args.getIntArray(PAGES), args.getInt(REQUEST_TYPE), lang);
     }
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> data) {
+//        System.out.println("onLoadFinished");
         hideAll();
         if (data.resultType == ResultType.OK) {
             if (adapter == null) {

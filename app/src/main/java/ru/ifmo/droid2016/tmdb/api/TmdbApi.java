@@ -30,6 +30,7 @@ public final class TmdbApi {
      * @param lang язык пользователя
      */
     public static HttpURLConnection getPopularMoviesRequest(String lang, int page) throws IOException {
+//        System.out.println("getPopularMoviesRequest");
         String request = BASE_URI.buildUpon()
                 .appendPath("movie").appendPath("popular")
                 .appendQueryParameter("api_key", API_KEY)
