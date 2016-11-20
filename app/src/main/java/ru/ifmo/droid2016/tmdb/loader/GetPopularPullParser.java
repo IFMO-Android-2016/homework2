@@ -11,37 +11,34 @@ import java.util.List;
 
 import ru.ifmo.droid2016.tmdb.model.Movie;
 
-public  class GetPopularPullParser {
+public class GetPopularPullParser {
     private static String LOG_TAG = "my_tag";
 
     public static LoadResult<List<Movie>> parse(InputStream in) {
-        LoadResult<List<Movie>> rez;
+        LoadResult<List<Movie>> res = res = new LoadResult<>(ResultType.ERROR, null);
 
         try {
             JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
             try {
                 reader.beginObject();
-                String next = reader.nextName();
 
-                if (! next.equals("page")) {
-                    throw new Exception();
+                while (reader.hasNext()) {
+                    String name = reader.nextName();
+                    if (name.equals("results")) {
+                        res = readArray(reader);
+                    } else {
+                        reader.skipValue();
+                    }
                 }
-                reader.skipValue();
-
-                next = reader.nextName();
-                if (!next.equals("results")) {
-                    throw new Exception();
-                }
-
-                rez = readArray(reader);
                 reader.endObject();
             } finally {
                 reader.close();
             }
         } catch (Exception ex) {
-            rez = new LoadResult<List<Movie>>(ResultType.ERROR, null);
+            Log.d(LOG_TAG, " Error!!!!");
+            res = new LoadResult<>(ResultType.ERROR, null);
         };
-        return rez;
+        return res;
     }
 
     private static LoadResult<List<Movie>> readArray(JsonReader reader) throws IOException {
@@ -51,7 +48,7 @@ public  class GetPopularPullParser {
             films.add(readFilm(reader));
         }
         reader.endArray();
-        return new LoadResult(ResultType.OK, films);
+        return new LoadResult<>(ResultType.OK, films);
     }
 
     private static Movie readFilm(JsonReader reader) throws  IOException{

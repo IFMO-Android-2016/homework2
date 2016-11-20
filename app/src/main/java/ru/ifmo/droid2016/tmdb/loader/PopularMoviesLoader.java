@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -51,41 +50,54 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
     @Override
     public LoadResult<List<Movie>> loadInBackground() {
         Log.d(LOG_TAG, " loadInBackground");
-
+/*
+        try {
+            Thread.sleep(2000);
+        }catch (Exception ex) {};
+*/
         HttpsURLConnection connection;
         try {
             connection = TmdbApi.getPopularMoviesRequest(pageId, language);
         } catch (Exception ex) {
             Log.d(LOG_TAG, "Error getPopularMoviesRequest\n");
-            return new LoadResult(ResultType.ERROR, null);
+            return new LoadResult<>(ResultType.ERROR, null);
         }
-        LoadResult<List<Movie>> rez = null;
-
+        LoadResult<List<Movie>> res = new LoadResult<>(ResultType.ERROR, null);
 
         Log.d(LOG_TAG, " connection " + String.valueOf(IOUtils.isConnectionAvailable(appContext, false)));
-        //return "------";
+
+        if (!IOUtils.isConnectionAvailable(appContext, false)) {
+            return new LoadResult<>(ResultType.NO_INTERNET, null);
+        }
+
+        int connectionResponseCode = 0;
+
         try {
-            Log.d(LOG_TAG, String.valueOf(connection.getResponseCode()));
+            connectionResponseCode = connection.getResponseCode();
+            Log.d(LOG_TAG, String.valueOf(connectionResponseCode));
+
+            if (connectionResponseCode != 200) {
+                return res;
+            }
         } catch (Exception ex) {
             Log.d(LOG_TAG, "ERROR!!!!!!!!!!");
+            return res;
         }
 
         try {
             Log.d(LOG_TAG, "  start");
 
-            rez = GetPopularPullParser.parse(new BufferedInputStream(connection.getInputStream()));
+            res = GetPopularPullParser.parse(new BufferedInputStream(connection.getInputStream()));
 
             Log.d(LOG_TAG, "OK_connection");
         } catch (Exception ex) {
-
             Log.d(LOG_TAG, "something wrong");
 
             Log.d(LOG_TAG, "???" + ex.toString());
         } finally {
             connection.disconnect();
         }
-        /**/
-        return new LoadResult(ResultType.OK, rez);
+        return res;
     }
 
     @Override
