@@ -3,6 +3,8 @@ package ru.ifmo.droid2016.tmdb.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import ru.ifmo.droid2016.tmdb.api.TmdbApi;
+
 /**
  * Информация о фильме, полученная из The Movie DB API
  */
@@ -32,12 +34,12 @@ public class Movie {
     /**
      * Описание фильма на языке пользователя.
      */
-    public final @Nullable String overviewText;
+    public final @NonNull String overviewText;
 
     /**
      * Название фильма на языке пользователя.
      */
-    public final @Nullable String localizedTitle;
+    public final @NonNull String localizedTitle;
 
     /**
      * Рейтинг фильма.
@@ -47,11 +49,11 @@ public class Movie {
     public Movie(int id,
                  @NonNull String posterPath,
                  @NonNull String originalTitle,
-                 @Nullable String overviewText,
-                 @Nullable String localizedTitle,
+                 @NonNull String overviewText,
+                 @NonNull String localizedTitle,
                  double rating) {
         this.id = id;
-        this.posterPath = posterPath;
+        this.posterPath = TmdbApi.getImageURI() + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;

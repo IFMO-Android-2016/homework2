@@ -17,8 +17,7 @@ public final class TmdbApi {
     private static final String API_KEY = "7f7e92d6bbd61accd6daac28e9d25b43";
 
     private static final Uri BASE_URI = Uri.parse("https://api.themoviedb.org/3");
-
-
+    
     private TmdbApi() {}
 
     /**
@@ -40,16 +39,7 @@ public final class TmdbApi {
         return (HttpURLConnection) new URL(uri.toString()).openConnection();
     }
 
-    /**
-     * Возвращает {@link HttpURLConnection} для выполнения запроса конфигурации API
-     *
-     * https://developers.themoviedb.org/3/configuration
-     */
-    public static HttpURLConnection getConfigurationRequest() throws IOException {
-        Uri uri = BASE_URI.buildUpon()
-                .appendPath("configuration")
-                .appendQueryParameter("api_key", API_KEY)
-                .build();
-        return (HttpURLConnection) new URL(uri.toString()).openConnection();
+    public static String getImageURI() {
+        return "http://image.tmdb.org/t/p/w92";
     }
 }

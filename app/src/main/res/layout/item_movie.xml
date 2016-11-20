@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <RelativeLayout
@@ -38,7 +39,7 @@
 
         <TextView
             android:id="@+id/movie_title_original"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/movie_title"
             android:layout_toRightOf="@id/movie_poster"
@@ -53,20 +54,21 @@
 
         <ImageView
             android:id="@+id/star"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:layout_below="@+id/movie_title_original"
             android:layout_toRightOf="@+id/movie_poster"
             android:layout_toEndOf="@+id/movie_poster"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_star" />
+            android:tint="#F4D03F"
+            android:src="@drawable/star" />
 
         <TextView
             android:id="@+id/movie_rating"
             android:layout_width="wrap_content"
-            android:layout_height="28dp"
+            android:layout_height="26dp"
             android:layout_below="@id/movie_title_original"
             android:layout_toRightOf="@id/star"
             android:layout_toEndOf="@id/star"
@@ -85,11 +87,8 @@
         android:id="@+id/movie_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/movie_about"
-        android:layout_alignLeft="@+id/movie_about"
-        android:layout_alignStart="@+id/movie_about"
         android:layout_marginTop="12dp"
         android:textSize="14sp"
         android:text="Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of Test Movie is a test of "/>
 
-</RelativeLayout>
+</LinearLayout>

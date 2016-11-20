@@ -9,7 +9,7 @@ import com.facebook.stetho.urlconnection.StethoURLConnectionManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
@@ -55,7 +55,12 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
                 in = connection.getInputStream();
                 in = stethoManager.interpretResponseStream(in);
 
-                data = MoviesDomParser.parseMovies(in);
+                try {
+                    data = MoviesDomParser.parseMovies(in);
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to get movies: ", e);
+                    data = new ArrayList<>();
+                }
 
                 resultType = ResultType.OK;
 
@@ -64,10 +69,6 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
                 throw new BadResponseException("HTTP: " + connection.getResponseCode()
                         + ", " + connection.getResponseMessage());
             }
-
-
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Failed to get movies", e);
 
         } catch (IOException e) {
             stethoManager.httpExchangeFailed(e);
