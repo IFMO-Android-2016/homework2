@@ -6,6 +6,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,6 +30,11 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
     private ProgressBar progressView;
     private TextView errorTextView;
 
+    private int downloadedPages, viewedPages, scrollPosition;
+
+    private String downloaded = "DOWNLOADED";
+    private String scrollPos = "SCROLL_POSITION";
+
     private MoviesRecyclerAdapter adapter;
 
     @Override
@@ -39,19 +45,56 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         errorTextView = (TextView) findViewById(R.id.error_text);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new RecylcerDividersDecorator(getResources().getColor(R.color.gray_a)));
         progressView.setVisibility(View.VISIBLE);
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
 
-        final Bundle loaderArgs = getIntent().getExtras();
-        getSupportLoaderManager().initLoader(0, loaderArgs, this);
+        viewedPages = 0;
+        downloadedPages = 1;
+        if (savedInstanceState != null) {
+            Log.d("Actitity restore", "restore");
+            downloadedPages = savedInstanceState.getInt(downloaded);
+            scrollPosition = savedInstanceState.getInt(scrollPos);
+            //recyclerView.scrollToPosition(scrollPosition);
+        }
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private static final String TAG = "Scroll listener";
+            private int visibleTreshold = 5;
+            private int loaded = 10;
+            boolean state = true;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int x, int y) {
+                super.onScrolled(recyclerView, x, y);
+                scrollPosition = adapter.position;
+                Log.d(TAG, "" + scrollPosition);
+                int itemCount = layoutManager.getItemCount();
+                int itemViewed = recyclerView.getChildCount();
+                int firstItem = layoutManager.findFirstVisibleItemPosition();
+                if (state && loaded < itemCount) {
+                    loaded = itemCount;
+                    state = false;
+                }
+                if (!state && (firstItem + visibleTreshold + 1) > itemCount - itemViewed) {
+                    downloadedPages++;
+                    state = true;
+                    downloadMovies();
+                }
+            }
+        });
+        downloadMovies();
+    }
+    public void downloadMovies() {
+        getSupportLoaderManager().initLoader(downloadedPages, getIntent().getExtras(), this);
     }
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        return new PopularMoviesLoader(this);
+        return new PopularMoviesLoader(this, id);
     }
 
     @Override
@@ -73,7 +116,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
             adapter = new MoviesRecyclerAdapter(this);
             recyclerView.setAdapter(adapter);
         }
-        adapter.setMovies(movies);
+        adapter.addMovies(movies);
         progressView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         errorTextView.setVisibility(View.GONE);
@@ -107,5 +150,11 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
+    }
+
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putInt(downloaded, downloadedPages);
+        bundle.putInt(scrollPos, scrollPosition);
     }
 }

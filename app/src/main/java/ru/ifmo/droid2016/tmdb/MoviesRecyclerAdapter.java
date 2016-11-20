@@ -23,7 +23,8 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAdapter.MovieViewHolder> {
     private final Context context;
     private final LayoutInflater layoutInflater;
-
+    private int lastItem;
+    public int position;
 
     private List<Movie> movies = new ArrayList<>();
 
@@ -37,6 +38,16 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAdapter.M
         notifyDataSetChanged();
     }
 
+    public void addMovies(List<Movie> movies1) {
+        if (movies.size() == 0) {
+            setMovies(movies1);
+        } else {
+            movies.addAll(movies1);
+        }
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return MovieViewHolder.newInstance(layoutInflater, parent);
@@ -44,16 +55,22 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAdapter.M
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
+        this.position = position;
         final Movie movie = movies.get(position);
         holder.titleView.setText(movie.localizedTitle);
         holder.imageView.setImageURI(movie.posterPath);
         holder.overviewView.setText(movie.overviewText);
-        Log.d(TAG, movie.posterPath);
+        lastItem = Math.max(lastItem, holder.getAdapterPosition());
+
     }
 
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+    public int getLastItem() {
+        return lastItem;
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {
