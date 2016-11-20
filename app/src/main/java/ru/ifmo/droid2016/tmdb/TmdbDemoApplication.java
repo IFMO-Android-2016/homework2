@@ -6,7 +6,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
 
 public class TmdbDemoApplication extends Application {
-    //Locale.getDefault().getLanguage()
     @Override
     public void onCreate() {
         super.onCreate();

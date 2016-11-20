@@ -1,6 +1,7 @@
 package ru.ifmo.droid2016.tmdb.api;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -28,16 +29,16 @@ public final class TmdbApi {
      * @param lang язык пользователя
      */
     public static HttpURLConnection getPopularMoviesRequest(String lang, int page) throws IOException {
+        if (page < 1) { page = 1; }
+        //Log.e("Page ", String.valueOf(page));
         Uri uri = BASE_URI.buildUpon()
                 .appendPath("movie")
                 .appendPath("popular")
-                .appendEncodedPath("page=" + page)
-                //.appendEncodedPath("language=" + lang)//TODO: Проверить работаспособность
+                .appendQueryParameter(KEY_HEADER_NAME, API_KEY)
                 .appendQueryParameter("language", lang)
+                .appendQueryParameter("page", String.valueOf(page))
                 .build();
-        HttpURLConnection connection = (HttpURLConnection) new URL(uri.toString()).openConnection();
-        connection.setRequestProperty(KEY_HEADER_NAME, API_KEY);
-        return connection;
+        return (HttpURLConnection) new URL(uri.toString()).openConnection();
     }
 
     public  static HttpURLConnection getPopularMoviesRequest (String lang) throws  IOException {

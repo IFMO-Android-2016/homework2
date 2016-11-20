@@ -24,6 +24,9 @@ import ru.ifmo.droid2016.tmdb.utils.IOUtils;
  */
 
 public class MoviesDomParser {
+    private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w300";
+
+
     @NonNull
     public static List<Movie> parseMovies(InputStream in) throws
             IOException,
@@ -32,31 +35,30 @@ public class MoviesDomParser {
 
         final String content = IOUtils.readToString(in, "UTF-8");
         final JSONObject json = new JSONObject(content);
-        return parseWebcams(json);
+        return parseMovies(json);
     }
 
     @NonNull
-    private static List<Movie> parseWebcams(JSONObject json) throws
+    private static List<Movie> parseMovies(JSONObject json) throws
             IOException,
             JSONException,
             BadResponseException {
 
-        final String status = json.getString("status");
+        /*final String status = json.getString("status");
         if (!"OK" .equals(status)) {
             throw new BadResponseException("Unexpected response status from API: " + status);
-        }
+        }*/
 
-        final JSONObject resultJson = json.getJSONObject("result");
-        final JSONArray moviesJson = resultJson.getJSONArray("webcams");
+        final JSONArray moviesJson = json.getJSONArray("results");
         final ArrayList<Movie> movies = new ArrayList<>();
 
         for (int i = 0; i < moviesJson.length(); i++) {
             final JSONObject movieJson = moviesJson.optJSONObject(i);
 
             if (movieJson != null) {
-                final String posterPath = movieJson.optString("poster_path", null);
-                final String originalTitel = movieJson.optString("original_title", null);
-                final String overwiewText = movieJson.optString("overview", null);
+                final String posterPath     = IMAGE_BASE_URL + movieJson.optString("poster_path", null);
+                final String originalTitel  = movieJson.optString("original_title", null);
+                final String overwiewText   = movieJson.optString("overview", null);
                 final String localizedTitle = movieJson.optString("title", null);
 
                 if (!TextUtils.isEmpty(posterPath) && !TextUtils.isEmpty(originalTitel)
