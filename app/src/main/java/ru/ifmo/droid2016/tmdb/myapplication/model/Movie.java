@@ -1,5 +1,6 @@
-package ru.ifmo.droid2016.tmdb.model;
+package ru.ifmo.droid2016.tmdb.myapplication.model;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 

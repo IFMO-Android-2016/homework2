@@ -1,4 +1,4 @@
-package ru.ifmo.droid2016.tmdb.loader;
+package ru.ifmo.droid2016.tmdb.myapplication.loader;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

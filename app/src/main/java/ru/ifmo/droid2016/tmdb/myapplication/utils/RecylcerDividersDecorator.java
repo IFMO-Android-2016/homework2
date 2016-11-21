@@ -1,4 +1,4 @@
-package ru.ifmo.droid2016.tmdb.utils;
+package ru.ifmo.droid2016.tmdb.myapplication.utils;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;

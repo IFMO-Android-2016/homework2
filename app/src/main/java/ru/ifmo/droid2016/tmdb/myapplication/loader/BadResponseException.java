@@ -1,4 +1,4 @@
-package ru.ifmo.droid2016.tmdb.loader;
+package ru.ifmo.droid2016.tmdb.myapplication.loader;
 
 /**
  * Kind of bad, incorrect or unexpected response from API.
