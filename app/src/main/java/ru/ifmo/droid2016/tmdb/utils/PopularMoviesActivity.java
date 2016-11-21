@@ -8,6 +8,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,6 +54,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
 
+        Log.d(TAG, "onCreate");
 
         final Bundle loaderArgs = getIntent().getExtras();
         getSupportLoaderManager().initLoader(0, loaderArgs, this);
@@ -63,10 +65,10 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         return new TmbLoader(this);
     }
 
-
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader,
                                LoadResult<List<Movie>> result) {
+        Log.d(TAG, "onLoadFinished");
         if (result.resultType == ResultType.OK) {
             if (result.data != null && !result.data.isEmpty()) {
                 displayNonEmptyData(result.data);
@@ -80,9 +82,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
+        Log.d(TAG, "onLoaderReset");
         displayEmptyData();
     }
-
 
     private void displayEmptyData() {
         progressView.setVisibility(View.GONE);

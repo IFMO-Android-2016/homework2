@@ -54,8 +54,6 @@ class MoviesRecyclerAdapter
         int visibility = myMovie.originalTitle.equals(myMovie.localizedTitle) ? View.GONE : View.VISIBLE;
         holder.localizedTitleView.setVisibility(visibility);
         holder.localizedTitleView.setText(myMovie.localizedTitle);
-
-
     }
 
     @Override

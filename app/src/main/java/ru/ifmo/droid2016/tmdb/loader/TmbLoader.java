@@ -17,20 +17,30 @@ import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
-/**
- * Created by macbook on 07.11.16.
- */
-
 public class TmbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     private static final String TAG = "Movies";
 
     public TmbLoader(Context context) {
         super(context);
+        Log.d(TAG, "TmbLoader: constructor");
     }
 
     @Override
     protected void onStartLoading() {
+        Log.d(TAG, "onStartLoading");
         forceLoad();
+    }
+
+    @Override
+    public void deliverResult(LoadResult<List<Movie>> data) {
+        Log.d(TAG, "deliverResult");
+        super.deliverResult(data);
+    }
+
+    @Override
+    protected void onForceLoad() {
+        Log.d(TAG, "onForceLoad");
+        super.onForceLoad();
     }
 
     @Override
@@ -89,8 +99,9 @@ public class TmbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
             }
         }
 
+        Log.d(TAG, "Request finished");
+
         return new LoadResult<>(resultType, data);
     }
 
 }
-
