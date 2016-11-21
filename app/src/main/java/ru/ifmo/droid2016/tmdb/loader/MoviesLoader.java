@@ -20,6 +20,7 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
     private final String lang;
     private final int page;
+    private boolean loaded = false;
 
     public MoviesLoader(Context context, String lang, int page) {
         super(context);
@@ -29,7 +30,10 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        Log.i(TAG, "onStartLoading");
+        if (!loaded) {
+            forceLoad();
+        }
     }
 
     @Override
@@ -88,8 +92,11 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
             }
         }
 
+        if (resultType == ResultType.OK) {
+            loaded = true;
+        }
         return new LoadResult<>(resultType, data);
     }
 
-    private static final String TAG = "Movies";
+    private static final String TAG = "MoviesLoader";
 }

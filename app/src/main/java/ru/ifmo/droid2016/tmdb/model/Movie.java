@@ -1,7 +1,8 @@
 package ru.ifmo.droid2016.tmdb.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 
@@ -9,7 +10,7 @@ import ru.ifmo.droid2016.tmdb.api.TmdbApi;
  * Информация о фильме, полученная из The Movie DB API
  */
 
-public class Movie {
+public class Movie implements Parcelable {
 
     /**
      * ID фильма в каталоге TMDB.
@@ -60,6 +61,27 @@ public class Movie {
         this.rating = rating;
     }
 
+    protected Movie(Parcel in) {
+        id = in.readInt();
+        posterPath = in.readString();
+        originalTitle = in.readString();
+        overviewText = in.readString();
+        localizedTitle = in.readString();
+        rating = in.readDouble();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -69,5 +91,20 @@ public class Movie {
                 ", localizedTitle='" + localizedTitle + '\'' +
                 ", rating='" + rating + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(posterPath);
+        dest.writeString(originalTitle);
+        dest.writeString(overviewText);
+        dest.writeString(localizedTitle);
+        dest.writeDouble(rating);
     }
 }

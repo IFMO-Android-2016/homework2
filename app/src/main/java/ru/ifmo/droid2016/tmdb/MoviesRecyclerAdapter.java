@@ -2,6 +2,7 @@ package ru.ifmo.droid2016.tmdb;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
+import ru.ifmo.droid2016.tmdb.model.LoadingMovie;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 
 class MoviesRecyclerAdapter extends RecyclerView.Adapter {
@@ -22,17 +24,17 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
 
     private final LayoutInflater layoutInflater;
     private final List<Movie> movies;
-    private boolean loading;
-    private int errorText;
+    private final PopularMoviesActivity context;
 
-    MoviesRecyclerAdapter(Context context, List<Movie> movies) {
+    MoviesRecyclerAdapter(PopularMoviesActivity context, List<Movie> movies) {
         this.movies = movies;
+        this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getItemViewType(int position) {
-        return movies.get(position) != null ? ITEM_MOVIE : ITEM_PROGRESS;
+        return movies.get(position) instanceof LoadingMovie ? ITEM_PROGRESS : ITEM_MOVIE;
     }
 
     @Override
@@ -48,16 +50,27 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ProgressViewHolder) {
+            final LoadingMovie movie = (LoadingMovie) movies.get(position);
             final ProgressViewHolder progressHolder = (ProgressViewHolder) holder;
-            progressHolder.progressBar.setIndeterminate(true);
-            progressHolder.tryAgainButton.setVisibility(View.GONE);
-            progressHolder.tryAgainButton.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    progressHolder.progressBar.setVisibility(View.VISIBLE);
-                    progressHolder.tryAgainButton.setVisibility(View.GONE);
-                }
-            });
+            if (movie.isLoading()) {
+                Log.i("BIND", "LOADING");
+                progressHolder.progressBar.setVisibility(View.VISIBLE);
+                progressHolder.progressBar.setIndeterminate(true);
+                progressHolder.tryAgainButton.setVisibility(View.GONE);
+                progressHolder.errorText.setVisibility(View.GONE);
+            } else {
+                Log.i("BIND", "ERROR");
+                progressHolder.progressBar.setVisibility(View.GONE);
+                progressHolder.tryAgainButton.setVisibility(View.VISIBLE);
+                progressHolder.errorText.setVisibility(View.VISIBLE);
+                progressHolder.errorText.setText(movie.getMessage());
+                progressHolder.tryAgainButton.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        context.loadNextPage(true);
+                    }
+                });
+            }
         } else if (holder instanceof MovieViewHolder) {
             final Movie movie = movies.get(position);
             final MovieViewHolder movieHolder = (MovieViewHolder) holder;
@@ -72,15 +85,6 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return movies.size();
-    }
-
-    public void setLoading(boolean loading) {
-        this.loading = loading;
-        
-    }
-
-    public void setErrorText(int errorText) {
-        this.errorText = errorText;
     }
 
     private static class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -107,11 +111,13 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
 
         private final ProgressBar progressBar;
         private final Button tryAgainButton;
+        private final TextView errorText;
 
         private ProgressViewHolder(View itemView) {
             super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
-            tryAgainButton = (Button) itemView.findViewById(R.id.try_again);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.item_progress);
+            tryAgainButton = (Button) itemView.findViewById(R.id.item_try_again);
+            errorText = (TextView) itemView.findViewById(R.id.item_error);
         }
 
         static ProgressViewHolder newInstance(LayoutInflater layoutInflater, ViewGroup parent) {

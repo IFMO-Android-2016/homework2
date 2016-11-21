@@ -24,8 +24,7 @@ public final class IOUtils {
             baos.write(buffer, 0, readSize);
         }
         final byte[] data = baos.toByteArray();
-        final String content = new String(data, charset);
-        return content;
+        return new String(data, charset);
     }
 
 
