@@ -3,43 +3,36 @@ package ru.ifmo.droid2016.tmdb.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Информация о фильме, полученная из The Movie DB API
- */
-
 public class Movie {
 
-    /**
-     * Path изображения постера фильма. Как из Path получить URL, описано здесь:
-     *
-     * https://developers.themoviedb.org/3/getting-started/languages
-     *
-     * В рамках ДЗ можно не выполнять отдельный запрос /configuration, а использовать
-     * базовый URL для картинок: http://image.tmdb.org/t/p/ и
-     */
-    public final @NonNull String posterPath;
+    private final @NonNull String posterPath;
 
-    /**
-     * Название фильма на языке оригинала.
-     */
-    public final @NonNull String originalTitle;
+    private final @Nullable String overviewText;
 
-    /**
-     * Описание фильма на языке пользователя.
+    /*
+    еее, бойлерплэйт, еее
      */
-    public final @Nullable String overviewText;
+    @Nullable
+    public String getLocalizedTitle() {
+        return localizedTitle;
+    }
 
-    /**
-     * Название фильма на языке пользователя.
-     */
-    public final @Nullable String localizedTitle;
+    @NonNull
+    public String getPosterPath() {
+        return posterPath;
+    }
 
-    public Movie(String posterPath,
-                 String originalTitle,
-                 String overviewText,
-                 String localizedTitle) {
+    @Nullable
+    public String getOverviewText() {
+        return overviewText;
+    }
+
+    private final @Nullable String localizedTitle;
+
+    public Movie(@NonNull String posterPath,
+                 @Nullable String overviewText,
+                 @Nullable String localizedTitle) {
         this.posterPath = posterPath;
-        this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
     }
