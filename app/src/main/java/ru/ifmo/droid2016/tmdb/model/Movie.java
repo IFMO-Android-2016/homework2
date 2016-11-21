@@ -1,5 +1,6 @@
 package ru.ifmo.droid2016.tmdb.model;
 
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -8,6 +9,8 @@ import android.support.annotation.Nullable;
  */
 
 public class Movie {
+
+    private final String BASE_URL = "https://image.tmdb.org/t/p/w500";
 
     /**
      * Path изображения постера фильма. Как из Path получить URL, описано здесь:
@@ -34,13 +37,22 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
+    public final @Nullable String voteRange;
+
+    public final @Nullable String releaseDate;
+
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
-                 String localizedTitle) {
-        this.posterPath = posterPath;
-        this.originalTitle = originalTitle;
-        this.overviewText = overviewText;
+                 String localizedTitle,
+                 String voteRange,
+                 String releaseDate) {
+        this.posterPath     = BASE_URL + posterPath;
+
+        this.originalTitle  = originalTitle;
+        this.overviewText   = overviewText;
         this.localizedTitle = localizedTitle;
+        this.voteRange      = voteRange;
+        this.releaseDate    = releaseDate;
     }
 }
