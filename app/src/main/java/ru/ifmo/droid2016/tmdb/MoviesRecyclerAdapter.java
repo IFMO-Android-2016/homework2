@@ -69,6 +69,7 @@ public class MoviesRecyclerAdapter
             super(itemView);
             localizedTitleView = (TextView) itemView.findViewById(R.id.movie_title);
             imageView = (SimpleDraweeView) itemView.findViewById(R.id.movie_image);
+            imageView.setAspectRatio(2f / 3);
             overviewTextView = (TextView) itemView.findViewById(R.id.text);
             originalTitleView = (TextView) itemView.findViewById(R.id.movie_original_title);
         }

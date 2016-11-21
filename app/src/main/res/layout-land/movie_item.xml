@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
         android:layout_width="match_parent"
@@ -27,24 +28,27 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:layout_width="378dp"
             android:orientation="horizontal"
-            android:layout_height="match_parent"
+            android:layout_height="258dp"
             android:id="@+id/movie_image" />
 
         <TextView
             android:text=""
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/text"
             android:typeface="serif"
             android:fontFamily="serif"
             android:textColor="?attr/editTextColor"
             android:textSize="16sp"
-            android:textAlignment="viewStart" />
+            android:textAlignment="viewStart"
+            android:scrollHorizontally="false"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            tools:scrollbarAlwaysDrawHorizontalTrack="true" />
 
     </LinearLayout>
 
