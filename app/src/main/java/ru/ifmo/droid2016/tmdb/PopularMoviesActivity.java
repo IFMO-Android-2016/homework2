@@ -26,9 +26,6 @@ import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 public class PopularMoviesActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
-    private static final String EXTRA_LANG = "lang";
-    private static final String EXTRA_PAGE = "page";
-
     private ProgressBar pb;
     private RecyclerView rv;
     private TextView tv;
@@ -47,39 +44,28 @@ public class PopularMoviesActivity extends AppCompatActivity
         pb.setVisibility(View.VISIBLE);
         rv = (RecyclerView) findViewById(R.id.recycler);
         rv.setVisibility(View.GONE);
-        tv = (TextView) findViewById(R.id.error_text);
-        tv.setVisibility(View.GONE);
-
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.addItemDecoration(new RecylcerDividersDecorator(R.color.colorPrimaryDark));
+        tv = (TextView) findViewById(R.id.error_text);
+        tv.setVisibility(View.GONE);
+        getSupportLoaderManager().initLoader(0, null, this);
+    }
 
-        final Bundle extraArgs = getIntent().getExtras();
-        getSupportLoaderManager().initLoader(0, extraArgs, this);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        rv.clearOnScrollListeners();
     }
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        final String lang;
-        final int page;
-
-        if (args != null && args.containsKey(EXTRA_LANG) && args.containsKey(EXTRA_PAGE)) {
-            lang = args.getString(EXTRA_LANG);
-            page = args.getInt(EXTRA_PAGE);
-        } else {
-            lang = Locale.getDefault().getLanguage();
-            page = 1;
-        }
-        return new PopularMoviesLoader(this, lang, page);
+        return new PopularMoviesLoader(this, Locale.getDefault().getLanguage(), id);
     }
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> data) {
         if (data.resultType == ResultType.OK) {
-            if (data.data != null && !data.data.isEmpty()) {
-                display(data.data);
-            } else {
-                hide();
-            }
+            display(data.data);
         } else {
             error(data.resultType);
         }
@@ -90,21 +76,22 @@ public class PopularMoviesActivity extends AppCompatActivity
         hide();
     }
 
-    private void display(List<Movie> data) {
-        if (adapter == null) {
-            adapter = new MovieRecyclerAdapter(this);
-            rv.setAdapter(adapter);
-        }
-        adapter.setMovies(data);
-        pb.setVisibility(View.GONE);
-        tv.setVisibility(View.GONE);
-        rv.setVisibility(View.VISIBLE);
-    }
-
     private void hide() {
         pb.setVisibility(View.GONE);
         rv.setVisibility(View.GONE);
         tv.setText(R.string.movies_not_found);
+    }
+
+    private void display(List<Movie> data) {
+        if (adapter == null) {
+            adapter = new MovieRecyclerAdapter(this);
+            rv.setAdapter(adapter);
+            rv.addOnScrollListener(new EndlessScroller(getSupportLoaderManager(), adapter, this));
+        }
+        adapter.addMovies(data);
+        pb.setVisibility(View.GONE);
+        tv.setVisibility(View.GONE);
+        rv.setVisibility(View.VISIBLE);
     }
 
     private void error(ResultType resultType) {

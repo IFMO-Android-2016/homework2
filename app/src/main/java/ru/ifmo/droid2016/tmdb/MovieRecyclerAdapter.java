@@ -20,18 +20,30 @@ public class MovieRecyclerAdapter
 
     private static final String ADDRESS = "https://image.tmdb.org/t/p/w500";
 
-    private final Context c;
     private final LayoutInflater li;
+    private int lastItem;
     @NonNull
     private List<Movie> movies = Collections.emptyList();
 
     public MovieRecyclerAdapter(Context c) {
-        this.c = c;
         this.li = LayoutInflater.from(c);
+    }
+
+    public int getLastItem() {
+        return lastItem;
     }
 
     public void setMovies(@NonNull List<Movie> movies) {
         this.movies = movies;
+        notifyDataSetChanged();
+    }
+
+    public void addMovies(List<Movie> nextMovies) {
+        if (movies.size() == 0) {
+            setMovies(nextMovies);
+        } else {
+            movies.addAll(nextMovies);
+        }
         notifyDataSetChanged();
     }
 
@@ -46,6 +58,8 @@ public class MovieRecyclerAdapter
         holder.overview.setText(m.overviewText);
         holder.title.setText(m.localizedTitle);
         holder.sdv.setImageURI(ADDRESS + m.posterPath);
+        holder.getAdapterPosition();
+        lastItem = Math.max(lastItem, holder.getAdapterPosition());
     }
 
     @Override

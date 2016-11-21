@@ -34,7 +34,7 @@ public final class TmdbApi {
                 .appendPath("popular")
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter("language", lang)
-                .appendQueryParameter("page", "" + page)
+                .appendQueryParameter("page", "" + (page + 1))
                 .build();
 
         return (HttpURLConnection) new URL(uri.toString()).openConnection();

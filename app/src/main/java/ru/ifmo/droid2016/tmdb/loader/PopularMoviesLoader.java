@@ -1,9 +1,13 @@
 package ru.ifmo.droid2016.tmdb.loader;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.facebook.stetho.urlconnection.StethoURLConnectionManager;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStream;
