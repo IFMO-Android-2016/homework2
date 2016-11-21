@@ -39,13 +39,7 @@ public class TmdbDomParser {
             JSONException,
             BadResponseException {
 
-        final String status = json.getString("status");
-        if (!"OK".equals(status)) {
-            throw new BadResponseException("Unexpected response status from API: " + status);
-        }
-
-        final JSONObject resultJson = json.getJSONObject("result");
-        final JSONArray moviesJson = resultJson.getJSONArray("movies");
+        final JSONArray moviesJson = json.getJSONArray("results");
         final ArrayList<Movie> movies = new ArrayList<>();
 
         for (int i = 0; i < moviesJson.length(); i++) {

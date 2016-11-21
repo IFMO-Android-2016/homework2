@@ -43,15 +43,13 @@ public class MoviesRecyclerAdapter
         return MovieViewHolder.newInstance(layoutInflater, parent);
     }
 
-    private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
-
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         final Movie movie = movies.get(position);
         holder.originalTitleView.setText(movie.originalTitle);
         holder.localizedTitleView.setText(movie.localizedTitle);
-        holder.imageView.setImageURI(IMAGE_BASE_URL + movie.posterPath);
+        holder.imageView.setImageURI(movie.posterPath);
         holder.overviewTextView.setText(movie.overviewText);
     }
 

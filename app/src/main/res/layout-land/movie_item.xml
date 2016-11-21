@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/movie_title" />
+        android:id="@+id/movie_title"
+        android:textSize="22sp"
+        android:typeface="monospace"
+        android:fontFamily="monospace"
+        android:textStyle="normal|bold"
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/movie_original_title" />
+        android:id="@+id/movie_original_title"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:fontFamily="casual"
+        android:typeface="monospace" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/movie_image"
-        android:layout_weight="0.65" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/text"
-        android:layout_weight="0.29" />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:layout_width="378dp"
+            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:id="@+id/movie_image" />
+
+        <TextView
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/text"
+            android:typeface="serif"
+            android:fontFamily="serif"
+            android:textColor="?attr/editTextColor"
+            android:textSize="16sp"
+            android:textAlignment="viewStart" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

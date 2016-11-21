@@ -2,30 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/movie_title" />
+        android:id="@+id/movie_title"
+        android:textSize="30sp"
+        android:typeface="monospace"
+        android:fontFamily="monospace"
+        android:textStyle="normal|bold"
+        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/movie_original_title" />
+        android:id="@+id/movie_original_title"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:fontFamily="casual"
+        android:typeface="monospace" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/movie_image"
-        android:layout_weight="0.65" />
+        android:layout_height="385dp"
+        android:layout_weight="0.60"
+        android:id="@+id/movie_image" />
 
     <TextView
         android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/text"
-        android:layout_weight="0.29" />
+        android:layout_weight="0.30"
+        android:typeface="serif"
+        android:fontFamily="serif"
+        android:textColor="?attr/editTextColor"
+        android:textSize="16sp" />
 
 
 </LinearLayout>

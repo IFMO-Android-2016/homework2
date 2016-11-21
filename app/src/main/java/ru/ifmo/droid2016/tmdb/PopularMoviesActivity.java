@@ -23,6 +23,7 @@ import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.loader.MoviesLoader;
 import ru.ifmo.droid2016.tmdb.loader.ResultType;
 import ru.ifmo.droid2016.tmdb.model.Movie;
+import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 
 /**
  * Экран, отображающий список популярных фильмов из The Movie DB.
@@ -35,7 +36,7 @@ public class PopularMoviesActivity extends AppCompatActivity
     private TextView errorTextView;
 
     @Nullable
-    private MoviesRecyclerAdapter adapter;
+    private MoviesRecyclerAdapter adapter = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class PopularMoviesActivity extends AppCompatActivity
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+//        recyclerView.addItemDecoration(
+//                new RecylcerDividersDecorator(getResources().getColor(R.color.colorForRes)));
 
         progressView.setVisibility(View.VISIBLE);
         errorTextView.setVisibility(View.GONE);
