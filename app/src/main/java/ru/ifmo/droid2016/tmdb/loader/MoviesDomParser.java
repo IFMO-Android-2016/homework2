@@ -15,6 +15,8 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 final class MoviesDomParser {
+    private MoviesDomParser() {}
+
     @NonNull
     static List<Movie> parseMovies(InputStream in) throws
             IOException,
@@ -52,6 +54,4 @@ final class MoviesDomParser {
         }
         return movies;
     }
-
-    private MoviesDomParser() {}
 }

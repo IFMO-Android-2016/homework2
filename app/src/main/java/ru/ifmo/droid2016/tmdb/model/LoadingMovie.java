@@ -2,7 +2,6 @@ package ru.ifmo.droid2016.tmdb.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import ru.ifmo.droid2016.tmdb.R;
 
@@ -24,12 +23,10 @@ public class LoadingMovie extends Movie {
     }
 
     public boolean isLoading() {
-        Log.i("MODEL", "isLoading: " + isLoading);
         return isLoading;
     }
 
     public void displayLoader() {
-        Log.i("MODEL", "Display LoadingMovie loader");
         isLoading = true;
     }
 

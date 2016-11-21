@@ -17,7 +17,7 @@ public final class TmdbApi {
     private static final String API_KEY = "7f7e92d6bbd61accd6daac28e9d25b43";
 
     private static final Uri BASE_URI = Uri.parse("https://api.themoviedb.org/3");
-    
+
     private TmdbApi() {}
 
     /**
@@ -42,4 +42,5 @@ public final class TmdbApi {
     public static String getImageURI() {
         return "http://image.tmdb.org/t/p/w92";
     }
+
 }

@@ -1,8 +1,6 @@
 package ru.ifmo.droid2016.tmdb;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,18 +51,16 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
             final LoadingMovie movie = (LoadingMovie) movies.get(position);
             final ProgressViewHolder progressHolder = (ProgressViewHolder) holder;
             if (movie.isLoading()) {
-                Log.i("BIND", "LOADING");
                 progressHolder.progressBar.setVisibility(View.VISIBLE);
                 progressHolder.progressBar.setIndeterminate(true);
                 progressHolder.tryAgainButton.setVisibility(View.GONE);
                 progressHolder.errorText.setVisibility(View.GONE);
             } else {
-                Log.i("BIND", "ERROR");
                 progressHolder.progressBar.setVisibility(View.GONE);
                 progressHolder.tryAgainButton.setVisibility(View.VISIBLE);
                 progressHolder.errorText.setVisibility(View.VISIBLE);
                 progressHolder.errorText.setText(movie.getMessage());
-                progressHolder.tryAgainButton.setOnClickListener(new View.OnClickListener(){
+                progressHolder.tryAgainButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         context.loadNextPage(true);

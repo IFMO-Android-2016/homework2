@@ -12,6 +12,9 @@ import java.io.InputStream;
 
 public final class IOUtils {
 
+    private static final ThreadLocal<byte[]> bufferThreadLocal = new ThreadLocal<>();
+    private IOUtils() {}
+
     /**
      * Читает содержимое потока в строку, используя указанный charset
      */
@@ -26,7 +29,6 @@ public final class IOUtils {
         final byte[] data = baos.toByteArray();
         return new String(data, charset);
     }
-
 
     /**
      * Читает до конца все, что есть в потоке (не закрывает)
@@ -79,9 +81,4 @@ public final class IOUtils {
         }
         return buffer;
     }
-
-    private static final ThreadLocal<byte[]> bufferThreadLocal = new ThreadLocal<>();
-
-
-    private IOUtils() {}
 }

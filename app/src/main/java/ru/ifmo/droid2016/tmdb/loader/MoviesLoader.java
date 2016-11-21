@@ -18,6 +18,7 @@ import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
+    private static final String TAG = "MoviesLoader";
     private final String lang;
     private final int page;
     private boolean loaded = false;
@@ -30,7 +31,6 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
     @Override
     protected void onStartLoading() {
-        Log.i(TAG, "onStartLoading");
         if (!loaded) {
             forceLoad();
         }
@@ -97,6 +97,4 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
         }
         return new LoadResult<>(resultType, data);
     }
-
-    private static final String TAG = "MoviesLoader";
 }

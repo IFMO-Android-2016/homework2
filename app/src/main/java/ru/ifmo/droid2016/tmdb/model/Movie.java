@@ -12,11 +12,22 @@ import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 
 public class Movie implements Parcelable {
 
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
     /**
      * ID фильма в каталоге TMDB.
      */
     public final int id;
-
     /**
      * Path изображения постера фильма. Как из Path получить URL, описано здесь:
      *
@@ -69,18 +80,6 @@ public class Movie implements Parcelable {
         localizedTitle = in.readString();
         rating = in.readDouble();
     }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 
     @Override
     public String toString() {

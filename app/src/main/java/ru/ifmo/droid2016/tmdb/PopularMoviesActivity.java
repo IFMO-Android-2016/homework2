@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -80,7 +79,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         if (savedInstanceState != null) {
             loadExistingActivity(savedInstanceState);
         } else {
-            Log.i(TAG, "SavedInstanceState is null");
             loadBlankActivity();
         }
 
@@ -89,7 +87,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
     }
 
     private void loadBlankActivity() {
-        Log.e(TAG, "###### Loading blank activity...");
         movies = new ArrayList<>();
         isFirstLoad = true;
         lastPage = 0;
@@ -106,7 +103,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
                 && savedMovies.size() > 0
                 && !savedFirstLoad && savedLastPage > 0
                 && Locale.getDefault().getLanguage().equals(savedLang)) {
-            Log.e(TAG, "###### Loading activity from saved instance...");
             movies = savedMovies;
             isFirstLoad = false;
             lastPage = savedLastPage;
@@ -118,8 +114,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
             addListener();
         } else {
             if (!Locale.getDefault().getLanguage().equals(savedLang)) {
-                Log.i(TAG, "New language: " + Locale.getDefault().getLanguage());
-                Log.i(TAG, "Old language: " + savedLang);
                 for (int i = savedLastPage; i != 0; i--) {
                     getSupportLoaderManager().destroyLoader(i);
                 }
@@ -129,19 +123,16 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
     }
 
     private void addListener() {
-        EndlessRecyclerViewScrollListener listener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void onLoadMore(final int page, int totalItemsCount, RecyclerView view) {
                 loadNextPage(false);
             }
-        };
-        //listener.setPageIndex(page);
-        recyclerView.addOnScrollListener(listener);
+        });
     }
 
     public void loadNextPage(boolean force) {
         displayLoader();
-        Log.i(TAG, "Next page");
         Bundle args = new Bundle();
         int page = lastPage + 1;
         args.putInt("page", page);
@@ -155,7 +146,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        Log.i(TAG, "New loader created");
         if (args == null) {
             args = new Bundle();
         }
@@ -189,8 +179,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
     @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
-        Log.e(TAG, "LOADER RESET");
-        //displayError(ResultType.ERROR);
+        // Do nothing
     }
 
     public void displayLoader() {
@@ -201,7 +190,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         } else {
             Movie last = movies.size() > 0 ? movies.get(movies.size() - 1) : null;
             if (last instanceof LoadingMovie) {
-                Log.i(TAG, "Display existing loader");
                 ((LoadingMovie) last).displayLoader();
                 handler.post(new Runnable() {
                     public void run() {
@@ -209,7 +197,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
                     }
                 });
             } else {
-                Log.i(TAG, "Add new loader");
                 movies.add(new LoadingMovie());
                 handler.post(new Runnable() {
                     public void run() {
@@ -226,8 +213,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
             progressView.setVisibility(View.GONE);
             errorLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-        } else {
-            // Do nothing...
         }
     }
 
@@ -268,28 +253,8 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         }
     }
 
-    private boolean isFirstLoad() {
-        return movies != null && movies.size() > 0;
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        Log.i(TAG, "Resume activity");
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.i(TAG, "Restore activity state");
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-
-        }
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.i(TAG, "Save activity state");
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(MOVIES_TAG, movies);
         outState.putBoolean(FIRSTLOAD_TAG, isFirstLoad);
