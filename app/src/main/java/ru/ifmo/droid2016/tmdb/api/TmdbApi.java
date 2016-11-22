@@ -29,7 +29,6 @@ public final class TmdbApi {
      * @param lang язык пользователя
      */
     public static HttpURLConnection getPopularMoviesRequest(String lang, int page) throws IOException {
-        //if (page < 1) { page = 1; }
         Log.e("Page ", String.valueOf(page));
         Uri uri = BASE_URI.buildUpon()
                 .appendPath("movie")

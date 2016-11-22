@@ -73,31 +73,30 @@ public class PopularMoviesActivity
             }
         });
 
-        progressView.setIndeterminate(true);
-        progressView.setVisibility(View.VISIBLE);
-        errorTextView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
+        if (adapter == null) {
+            adapter = new RecyclerAdapter(this);
+            recyclerView.setAdapter(adapter);
+        }
 
         // Pass all extra params directly to loader
-      /*  if (savedInstanceState == null || !savedInstanceState.containsKey("last language")
-                || !savedInstanceState.getString("last language").equals(Locale.getDefault().getLanguage())
-                || !savedInstanceState.containsKey("movies")) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey("list movies")) {
 
+            progressView.setIndeterminate(true);
+            progressView.setVisibility(View.VISIBLE);
+            errorTextView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
 
-
-            if(isOnline()) {
+            if (isOnline()) {
                 final Bundle loaderArgs = getIntent().getExtras();
-                getSupportLoaderManager().initLoader(0, loaderArgs, this).forceLoad();
+                getSupportLoaderManager().initLoader(1, loaderArgs, this).forceLoad();
             } else {
                 displayError(ResultType.NO_INTERNET);
             }
-        } else{
+        } else {
             ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList("list movies");
             assert movies != null;
             adapter.setMovies(movies);
-        }*/
-        final Bundle loaderArgs = getIntent().getExtras();
-        getSupportLoaderManager().initLoader(1, loaderArgs, this).forceLoad();
+        }
     }
 
     @Override
@@ -110,7 +109,7 @@ public class PopularMoviesActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("nNewPage", nNewPage);
-        //  outState.putParcelableArrayList("list movies", (ArrayList<? extends Parcelable>) adapter.getMovies());
+        outState.putParcelableArrayList("list movies", adapter.getMovies());
     }
 
     @Override
@@ -143,12 +142,7 @@ public class PopularMoviesActivity
             nNewPage = 1;
             getSupportLoaderManager().restartLoader(nNewPage, null, this).forceLoad();
 
-        }/* else {
-            if (mBundleRecyclerViewState != null) {
-                Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-                recyclerView.getLayoutManager().onRestoreInstanceState(listState);
-            }
-        }*/
+        }
 
     }
 
@@ -167,18 +161,11 @@ public class PopularMoviesActivity
         if (data.isEmpty()) {
             displayError(ERROR);
         } else {
-
-            if (adapter == null) {
-                adapter = new RecyclerAdapter(this);
-                recyclerView.setAdapter(adapter);
-            }
-
             if (isLanguageChanged) {
                 adapter.setMovies(data);
             } else {
                 adapter.addMovies(data);
             }
-
             isLanguageChanged = false;
             progressView.setVisibility(View.GONE);
             errorTextView.setVisibility(View.GONE);
