@@ -13,7 +13,6 @@ import java.util.Locale;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 
 public class GetPopularPullParser {
-    private static String LOG_TAG = "my_tag";
     private static int page;
     private static String locLang;
 
@@ -43,7 +42,6 @@ public class GetPopularPullParser {
                 reader.close();
             }
         } catch (Exception ex) {
-            Log.d(LOG_TAG, " Error!!!!");
             res = new LoadResult<>(ResultType.ERROR, null);
         }
         return res;
@@ -76,14 +74,6 @@ public class GetPopularPullParser {
             }
         }
         reader.endObject();
-
-        Log.d(LOG_TAG, posterPath);
-        Log.d(LOG_TAG, originalTitle);
-        Log.d(LOG_TAG, overviewText);
-        Log.d(LOG_TAG, localizedTitle);
-
-        Log.d(LOG_TAG, "-------------");
-
         return new Movie(posterPath, originalTitle, overviewText, localizedTitle, page, locLang);
     }
 }

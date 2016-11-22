@@ -2,7 +2,6 @@ package ru.ifmo.droid2016.tmdb.utils;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,7 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 
 public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {
 
-    protected final static String LOG_TAG = "my_tag";
-    protected final int MIN_NUM_REST_FILMS = 10;
+    protected final int MIN_NUM_REST_FILMS = 15;
     protected final String baseURL = "https://image.tmdb.org/t/p/";
 
     protected boolean isInternetAvailable = true;
@@ -34,7 +32,6 @@ public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerA
     public Set<Integer> pagesWithError = new HashSet<>();
 
     protected Vector<Movie> movies = new Vector<>();
-    //protected Vector<>
 
     public Vector<Movie> getData() {
         return movies;
@@ -54,12 +51,6 @@ public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerA
             mSimpleDraweeView = (SimpleDraweeView) v.findViewById(R.id.my_image_view);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
             imageErrorView = (ImageView) v.findViewById(R.id.image_error_view);
-
-            Log.d(LOG_TAG + "new", " in new adapter");
-
-            Log.d(LOG_TAG + "new", " ???? :" + mSimpleDraweeView.getLayoutParams().width + " "
-                    + mSimpleDraweeView.getLayoutParams().height);
-
 
             overviewText = (TextView) v.findViewById(R.id.overview_text);
         }
@@ -164,8 +155,6 @@ public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerA
         holder.mSimpleDraweeView.setImageURI(Uri.parse(str));
 
         holder.overviewText.setText(movies.elementAt(position).overviewText);
-
-        Log.d(LOG_TAG, str);
 
         if (movies.size() - position <= MIN_NUM_REST_FILMS) {
             if (movies.size() > 0) {

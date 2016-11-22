@@ -14,10 +14,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -49,8 +47,6 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
     Set<Integer> queue;
 
-    private final String LOG_TAG = "my_tag";
-
     private final String LANG = "LANG";
     private Loader<LoadResult<List<Movie>>> mLoader;
 
@@ -73,7 +69,6 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
                 final android.net.NetworkInfo mobile = connectivityManager
                         .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
                 if (wifi.isAvailable() || mobile.isAvailable()) {
-                    Log.d(LOG_TAG, "Available");
                     mAdapter.updInternetState(true);
 
                     for (Integer w : mAdapter.pagesWithError) {
@@ -83,11 +78,9 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
                     startDownloading();
                 }
-
             }
         }
     };
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -104,14 +97,8 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
         Point dimens = new Point();
         display.getSize(dimens);
 
-        Log.d(LOG_TAG, "dimens : " + dimens.x + " " + dimens.y);
-
         TmdbDemoApplication.displayHeight = dimens.y;
         TmdbDemoApplication.displayWidth = dimens.x;
-
-
-        Log.d(LOG_TAG, "dimens : " + TmdbDemoApplication.displayHeight
-                + " " + TmdbDemoApplication.displayWidth);
     }
 
     void initRecyclerView() {
@@ -179,8 +166,6 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
                     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                         super.onScrollStateChanged(recyclerView, newState);
                         if (newState == SCROLL_STATE_IDLE) {
-                            Log.d(LOG_TAG, "stop scrolling");
-
                             Set<Integer> pagesNeededToUpd = mAdapter.getPagesNeededToUpd();
                             if (pagesNeededToUpd.size() > 0) {
                                 addPageToQueue(pagesNeededToUpd.iterator().next());
@@ -193,20 +178,15 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        Log.d(LOG_TAG, "starting ###");
-
         return new PopularMoviesLoader(this, args);
     }
 
     @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
-        Log.d(LOG_TAG, "onLoaderReset");
     }
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> res) {
-        Log.d(LOG_TAG, "res : " + res.resultType);
-
         int numFilms = 0;
 
         if (res.resultType == ResultType.OK) {
@@ -220,12 +200,9 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
                     numFilms++;
                 }
             }
-            Log.d(LOG_TAG, "page " + page);
             if (page == nextPage) {
                 nextPage++;
             }
-
-            Log.d(LOG_TAG, "nextPage " + nextPage);
 
             queue.remove(page);
             mAdapter.pagesWithError.remove(page);
@@ -283,28 +260,18 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
         }
     }
 
-    public void downloadNextPage() {
-        Log.d(LOG_TAG, "downloadNextPage !!!");
-        addPageToQueue(nextPage);
-    }
-
     void addPageToQueue(int page) {
         queue.add(page);
         startDownloading();
     }
 
     void startDownloading() {
-        Log.d(LOG_TAG, "startDownloading " + queue.size() + " " + pageInProcess);
         if ((queue.size() > 0) && (pageInProcess == -1)) {
-            Iterator<Integer> it = queue.iterator();
-
-            Integer w = it.next();
+            Integer w =  queue.iterator().next();
 
             Bundle mBundle = new Bundle();
             mBundle.putString("LANG", currentLang);
             mBundle.putInt("PAGE_ID", w);
-
-            Log.d(LOG_TAG, "startDownloading " + w);
 
             pageInProcess = w;
 
