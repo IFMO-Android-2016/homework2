@@ -59,7 +59,7 @@ public class PopularMoviesActivity extends AppCompatActivity
             }
             adapter.updateData(data.data);
             rv.setVisibility(View.VISIBLE);
-        } else if (data.resultType == ResultType.ERROR || data.data.size() == 0) {
+        } else if (data.resultType == ResultType.ERROR || (data.data != null && data.data.size() == 0)) {
             hideOrShow(true);
             errorText.setText("Произошла какая-то ошибка");
         } else if (data.resultType == ResultType.NO_INTERNET) {
