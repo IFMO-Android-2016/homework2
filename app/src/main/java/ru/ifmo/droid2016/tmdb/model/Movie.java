@@ -19,6 +19,8 @@ public class Movie {
      */
     public final @NonNull String posterPath;
 
+    public final @NonNull String defaultPath = "https://image.tmdb.org/t/p/w500";
+
     /**
      * Название фильма на языке оригинала.
      */
@@ -38,7 +40,7 @@ public class Movie {
                  String originalTitle,
                  String overviewText,
                  String localizedTitle) {
-        this.posterPath = posterPath;
+        this.posterPath = defaultPath + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
