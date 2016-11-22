@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import ru.ifmo.droid2016.tmdb.R;
 import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 
 /**
@@ -12,22 +13,11 @@ import ru.ifmo.droid2016.tmdb.api.TmdbApi;
 
 public class Movie implements Parcelable {
 
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
-
     /**
      * ID фильма в каталоге TMDB.
      */
     public final int id;
+
     /**
      * Path изображения постера фильма. Как из Path получить URL, описано здесь:
      *
@@ -58,6 +48,24 @@ public class Movie implements Parcelable {
      */
     public final double rating;
 
+    /**
+     * Пустой объект-лоадер
+     */
+    private final boolean empty;
+
+    private boolean error = false;
+    private int message = R.string.error;
+
+    public Movie() {
+        this.id = 0;
+        this.posterPath = "";
+        this.originalTitle = "";
+        this.overviewText = "";
+        this.localizedTitle = "";
+        this.rating = 0;
+        this.empty = true;
+    }
+
     public Movie(int id,
                  @NonNull String posterPath,
                  @NonNull String originalTitle,
@@ -70,6 +78,7 @@ public class Movie implements Parcelable {
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
         this.rating = rating;
+        this.empty = false;
     }
 
     protected Movie(Parcel in) {
@@ -79,7 +88,22 @@ public class Movie implements Parcelable {
         overviewText = in.readString();
         localizedTitle = in.readString();
         rating = in.readDouble();
+        empty = in.readByte() != 0;
+        error = in.readByte() != 0;
+        message = in.readInt();
     }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     @Override
     public String toString() {
@@ -90,6 +114,27 @@ public class Movie implements Parcelable {
                 ", localizedTitle='" + localizedTitle + '\'' +
                 ", rating='" + rating + '\'' +
                 '}';
+    }
+
+    public boolean isLoader() {
+        return empty;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void displayLoader() {
+        error = false;
+    }
+
+    public void displayError(int message) {
+        this.message = message;
+        error = true;
+    }
+
+    public int getErrorMessage() {
+        return message;
     }
 
     @Override
@@ -105,5 +150,8 @@ public class Movie implements Parcelable {
         dest.writeString(overviewText);
         dest.writeString(localizedTitle);
         dest.writeDouble(rating);
+        dest.writeByte((byte) (empty ? 1 : 0));
+        dest.writeByte((byte) (error ? 1 : 0));
+        dest.writeInt(message);
     }
 }

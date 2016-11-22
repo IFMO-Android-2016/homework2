@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
     <ProgressBar
         android:id="@+id/progress"
@@ -38,9 +38,9 @@
             android:id="@+id/try_again"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/try_again"/>
+            android:layout_gravity="center"
+            android:text="@string/try_again" />
 
     </LinearLayout>
-
 
 </FrameLayout>

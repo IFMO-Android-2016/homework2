@@ -12,7 +12,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
-import ru.ifmo.droid2016.tmdb.model.LoadingMovie;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 
 class MoviesRecyclerAdapter extends RecyclerView.Adapter {
@@ -32,7 +31,7 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return movies.get(position) instanceof LoadingMovie ? ITEM_PROGRESS : ITEM_MOVIE;
+        return movies.get(position).isLoader() ? ITEM_PROGRESS : ITEM_MOVIE;
     }
 
     @Override
@@ -47,10 +46,10 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final Movie movie = movies.get(position);
         if (holder instanceof ProgressViewHolder) {
-            final LoadingMovie movie = (LoadingMovie) movies.get(position);
             final ProgressViewHolder progressHolder = (ProgressViewHolder) holder;
-            if (movie.isLoading()) {
+            if (!movie.isError()) {
                 progressHolder.progressBar.setVisibility(View.VISIBLE);
                 progressHolder.progressBar.setIndeterminate(true);
                 progressHolder.tryAgainButton.setVisibility(View.GONE);
@@ -59,7 +58,7 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
                 progressHolder.progressBar.setVisibility(View.GONE);
                 progressHolder.tryAgainButton.setVisibility(View.VISIBLE);
                 progressHolder.errorText.setVisibility(View.VISIBLE);
-                progressHolder.errorText.setText(movie.getMessage());
+                progressHolder.errorText.setText(movie.getErrorMessage());
                 progressHolder.tryAgainButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -68,7 +67,6 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter {
                 });
             }
         } else if (holder instanceof MovieViewHolder) {
-            final Movie movie = movies.get(position);
             final MovieViewHolder movieHolder = (MovieViewHolder) holder;
             movieHolder.imageView.setImageURI(movie.posterPath);
             movieHolder.titleView.setText(movie.localizedTitle);
