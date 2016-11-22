@@ -40,8 +40,8 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
 
     @Override
     protected void onStartLoading() {
-        if (!isLoaded) {
-            forceLoad();
+        if (!isLoaded || listLoadResult == null) {
+          //  forceLoad();
         }  else {
             deliverResult(listLoadResult); //return data to activity
         }

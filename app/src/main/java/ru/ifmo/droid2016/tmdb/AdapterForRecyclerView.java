@@ -52,6 +52,11 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MovieViewHold
     void setMovies(@NonNull List<Movie> data) {
         this.movies = new ArrayList<>();
         addMovies(data);
+        notifyDataSetChanged();
+    }
+
+    ArrayList<Movie> getMovies(){
+        return movies;
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {
