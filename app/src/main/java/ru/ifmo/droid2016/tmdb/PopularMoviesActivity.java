@@ -1,6 +1,7 @@
 package ru.ifmo.droid2016.tmdb;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -32,10 +33,12 @@ public class PopularMoviesActivity
         extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
-    private static final int ITEMS_ON_THE_PAGE = 20;
-    private static int       nNewPage          = 1;
-    private static String    language          = (String) Locale.getDefault().getLanguage();
-    private static boolean   isLanguageChanged = false;
+    private static final int ITEMS_ON_THE_PAGE  = 20;
+    private static int       nNewPage           = 1;
+    private static String    language           = (String) Locale.getDefault().getLanguage();
+    private static boolean   isLanguageChanged  = false;
+    private final String     KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
 
     private RecyclerView     recyclerView;
     private TextView         errorTextView;
@@ -56,6 +59,8 @@ public class PopularMoviesActivity
         recyclerView.addItemDecoration(new RecylcerDividersDecorator(
                 ResourcesCompat.getColor(getResources(), R.color.colorPrimaryDark, null)));
 
+
+        progressView.setIndeterminate(true);
         progressView.setVisibility (View.VISIBLE);
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility (View.GONE);
@@ -68,7 +73,8 @@ public class PopularMoviesActivity
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int nNewPage, Bundle args) {
         Log.d(TAG, "onCreateLoader: language = " + language);
-        return new PopularMoviesLoader(this, language, nNewPage++);
+        if (args == null) { args = new Bundle(); }
+        return new PopularMoviesLoader(this, language, args.getInt("nNewPage", 1));
     }
 
     @Override
@@ -83,16 +89,18 @@ public class PopularMoviesActivity
         nNewPage = savedInstanceState.getInt("nNewPage");
     }
 
+
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (adapter != null) {
-            adapter.setMovies(new ArrayList<Movie>());
-        }
+    protected void onPause() {
+        super.onPause();
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         if (!language.equals(Locale.getDefault().getLanguage())) {
             for (int i = 0; i < nNewPage; i++) {
                 getSupportLoaderManager().destroyLoader(i);
@@ -103,8 +111,9 @@ public class PopularMoviesActivity
             getSupportLoaderManager().restartLoader(nNewPage, null, this);
 
         } else {
-            for (int i = 0; i < nNewPage; i++) {
-                getSupportLoaderManager().initLoader(i, null, getCallback());
+            if (mBundleRecyclerViewState != null) {
+                Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+                recyclerView.getLayoutManager().onRestoreInstanceState(listState);
             }
         }
 
@@ -117,23 +126,23 @@ public class PopularMoviesActivity
                 }
             }
         });
-        super.onResume();
     }
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader,
                                LoadResult<List<Movie>> result) {
         Log.d(TAG, "onLoadFinished: " + result);
-        if (result.resultType == OK) {
+        if (result.resultType == OK && result.data != null) {
+            nNewPage++;
             display(result.data);
         } else {
-            error(result.resultType);
+            displayError(result.resultType);
         }
     }
 
     private void display(List<Movie> data) {
         if (data.isEmpty()) {
-            error(ERROR);
+            displayError(ERROR);
         } else {
             if (adapter == null) {
                 adapter = new RecyclerAdapter(this);
@@ -153,7 +162,7 @@ public class PopularMoviesActivity
         }
     }
 
-    private void error(ResultType e) {
+    private void displayError(ResultType e) {
         progressView.setVisibility  (View.GONE);
         recyclerView.setVisibility  (View.GONE);
         errorTextView.setVisibility (View.VISIBLE);
@@ -161,9 +170,7 @@ public class PopularMoviesActivity
     }
 
     @Override
-    public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
-        adapter = null;
-    }
+    public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) { adapter = null; }
 
     private PopularMoviesActivity getCallback() {
         return this;
