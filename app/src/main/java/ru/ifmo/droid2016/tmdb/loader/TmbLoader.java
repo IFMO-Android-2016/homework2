@@ -19,8 +19,11 @@ import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 public class TmbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     private static final String TAG = "Movies";
+    private LoadResult<List<Movie>> listOfData;
 
-    public TmbLoader(Context context) {
+    public boolean notToLoad = false;
+
+    public TmbLoader(Context context, int i) {
         super(context);
         Log.d(TAG, "TmbLoader: constructor");
     }
@@ -28,7 +31,11 @@ public class TmbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     @Override
     protected void onStartLoading() {
         Log.d(TAG, "onStartLoading");
-        forceLoad();
+        if (!notToLoad) {
+            forceLoad();
+        } else {
+            deliverResult(listOfData);
+        }
     }
 
     @Override
@@ -98,10 +105,13 @@ public class TmbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
                 connection.disconnect();
             }
         }
+        if (resultType == ResultType.OK) {
+            notToLoad = true;
+        }
 
         Log.d(TAG, "Request finished");
-
-        return new LoadResult<>(resultType, data);
+        listOfData = new LoadResult<>(resultType, data);
+        return listOfData;
     }
 
 }

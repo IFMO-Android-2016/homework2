@@ -1,5 +1,4 @@
 package ru.ifmo.droid2016.tmdb.utils;
-//
 
 import android.content.Context;
 
@@ -83,6 +82,5 @@ class MoviesRecyclerAdapter
             return new MovieViewHolder(view);
         }
     }
-
     private static final String TAG = "Movie Adapter";
 }

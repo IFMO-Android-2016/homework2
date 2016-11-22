@@ -14,13 +14,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import ru.ifmo.droid2016.tmdb.R;
 import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.loader.ResultType;
 import ru.ifmo.droid2016.tmdb.loader.TmbLoader;
 import ru.ifmo.droid2016.tmdb.model.Movie;
-import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
+
 
 /**
  * Экран, отображающий список популярных фильмов из The Movie DB.
@@ -30,15 +31,18 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
     public static final String EXTRA_LATITUDE = "lat";
     public static final String EXTRA_LONGITUDE = "lng";
-
+    private static String lang = Locale.getDefault().getLanguage();
     private RecyclerView recyclerView;
     private ProgressBar progressView;
     private TextView errorTextView;
+    private boolean langWasChanged = false;
+
 
     @Nullable
     private MoviesRecyclerAdapter adapter;
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
@@ -56,19 +60,32 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
         Log.d(TAG, "onCreate");
 
-        final Bundle loaderArgs = getIntent().getExtras();
-        getSupportLoaderManager().initLoader(0, loaderArgs, this);
+
+        getSupportLoaderManager().initLoader(0, null, this);
     }
+
+    private static int id = 0;
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        return new TmbLoader(this);
+        //return new TmbLoader(this);
+        ++id;
+        return new TmbLoader(this, id);
+
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("id", id);
+    }
+
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader,
                                LoadResult<List<Movie>> result) {
-        Log.d(TAG, "onLoadFinished");
+        Log.d(TAG, "onLoadFinishedgit");
         if (result.resultType == ResultType.OK) {
             if (result.data != null && !result.data.isEmpty()) {
                 displayNonEmptyData(result.data);
@@ -80,10 +97,22 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         }
     }
 
+
     @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
         Log.d(TAG, "onLoaderReset");
         displayEmptyData();
+    }
+
+    @Override
+    protected void onResume() {
+        if (!lang.equals(Locale.getDefault().getLanguage())) {
+            lang = Locale.getDefault().getLanguage();
+            Log.e(TAG, "onResume: changed locale");
+            langWasChanged = true;
+            getSupportLoaderManager().restartLoader(0, null, this);
+        }
+        super.onResume();
     }
 
     private void displayEmptyData() {
@@ -118,6 +147,12 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
     }
 
     private static final String TAG = "Movies";
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        id = savedInstanceState.getInt("id");
+    }
 
 }
 
