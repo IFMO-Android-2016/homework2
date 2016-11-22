@@ -8,15 +8,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ru.ifmo.droid2016.tmdb.model.Movie;
 
 public class GetPopularPullParser {
     private static String LOG_TAG = "my_tag";
+    private static int page;
+    private static String locLang;
 
     public static LoadResult<List<Movie>> parse(InputStream in) {
-        LoadResult<List<Movie>> res = res = new LoadResult<>(ResultType.ERROR, null);
-
+        LoadResult<List<Movie>> res = new LoadResult<>(ResultType.ERROR, null);
+        page = -1;
+        locLang = Locale.getDefault().getLanguage();
         try {
             JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
             try {
@@ -27,7 +31,11 @@ public class GetPopularPullParser {
                     if (name.equals("results")) {
                         res = readArray(reader);
                     } else {
-                        reader.skipValue();
+                        if (name.equals("page")) {
+                            page = reader.nextInt();
+                        } else {
+                            reader.skipValue();
+                        }
                     }
                 }
                 reader.endObject();
@@ -37,12 +45,12 @@ public class GetPopularPullParser {
         } catch (Exception ex) {
             Log.d(LOG_TAG, " Error!!!!");
             res = new LoadResult<>(ResultType.ERROR, null);
-        };
+        }
         return res;
     }
 
     private static LoadResult<List<Movie>> readArray(JsonReader reader) throws IOException {
-        List<Movie> films = new ArrayList<Movie>();
+        List<Movie> films = new ArrayList<>();
         reader.beginArray();
         while (reader.hasNext()) {
             films.add(readFilm(reader));
@@ -76,6 +84,6 @@ public class GetPopularPullParser {
 
         Log.d(LOG_TAG, "-------------");
 
-        return new Movie(posterPath, originalTitle, overviewText, localizedTitle);
+        return new Movie(posterPath, originalTitle, overviewText, localizedTitle, page, locLang);
     }
 }

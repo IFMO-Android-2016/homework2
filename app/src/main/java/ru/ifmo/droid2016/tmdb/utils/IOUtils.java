@@ -65,6 +65,9 @@ public final class IOUtils {
         if (connectivityManager == null) {
             return defaultValue;
         }
+
+        //connectivityManager.
+
         final NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
         return ni != null && ni.isConnected();
     }

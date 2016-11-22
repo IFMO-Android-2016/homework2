@@ -24,8 +24,13 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
 
     public PopularMoviesLoader(Context context, Bundle bundle) {
         super(context);
-
         Log.d(LOG_TAG, " constructor");
+
+        init(context, bundle);
+    }
+
+    public void init(Context context, Bundle bundle) {
+        Log.d(LOG_TAG, " init");
 
         appContext = context;
 
@@ -50,11 +55,11 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
     @Override
     public LoadResult<List<Movie>> loadInBackground() {
         Log.d(LOG_TAG, " loadInBackground");
-/*
+
         try {
             Thread.sleep(2000);
         }catch (Exception ex) {};
-*/
+
         HttpsURLConnection connection;
         try {
             connection = TmdbApi.getPopularMoviesRequest(pageId, language);
@@ -101,8 +106,9 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
     }
 
     @Override
-    public void deliverResult(LoadResult<List<Movie>> rez) {
+    public void deliverResult(LoadResult<List<Movie>> res) {
         Log.d("deliverResult", "-");
-        super.deliverResult(rez);
+        super.deliverResult(res);
     }
+
 }

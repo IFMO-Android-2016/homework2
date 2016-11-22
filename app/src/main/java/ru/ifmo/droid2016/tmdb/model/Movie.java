@@ -34,13 +34,21 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
+    public final int page;
+
+    public final String locLang;
+
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
-                 String localizedTitle) {
+                 String localizedTitle,
+                 int page,
+                 String locLang) {
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.page = page;
+        this.locLang = locLang;
     }
 }

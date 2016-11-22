@@ -1,8 +1,13 @@
 package ru.ifmo.droid2016.tmdb;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -11,12 +16,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.Set;
 
 import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.loader.PopularMoviesLoader;
@@ -27,6 +31,8 @@ import ru.ifmo.droid2016.tmdb.utils.MyRecyclerAdapterLand;
 import ru.ifmo.droid2016.tmdb.utils.MyRecyclerAdapterPortrait;
 import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+import android.widget.Toast;
 /**
  * Экран, отображающий список популярных фильмов из The Movie DB.
  */
@@ -34,149 +40,227 @@ public class PopularMoviesActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
     private static final String KEY_NEXT_PAGE = "NEXT_PAGE";
+    private static final String KEY_PREVIOUS_LANG = "PREVIOUS_LANG";
+    private static final String KEY_PAGE_IN_PROCESS = "PAGE_IN_PROCESS";
 
-    int nextPage;
+    int nextPage = 1;
+    private String currentLang;
+    int pageInProcess;
+
+    Set<Integer> queue;
 
     private final String LOG_TAG = "my_tag";
 
     private final String LANG = "LANG";
-    private Bundle mBundle;
     private Loader<LoadResult<List<Movie>>> mLoader;
 
     private RecyclerView mRecyclerView;
     private MyRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private final String BROADCAST_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+    IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(BROADCAST_ACTION)) {
+                final ConnectivityManager connectivityManager =
+                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                final android.net.NetworkInfo wifi = connectivityManager
+                        .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                final android.net.NetworkInfo mobile = connectivityManager
+                        .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                if (wifi.isAvailable() || mobile.isAvailable()) {
+                    Log.d(LOG_TAG, "Available");
+                    startDownloading();
+                }
+
+            }
+
+
+        }
+    };
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putInt(KEY_NEXT_PAGE, nextPage);
+        outState.putString(KEY_PREVIOUS_LANG, currentLang);
+        outState.putInt(KEY_PAGE_IN_PROCESS, pageInProcess);
+        TmdbDemoApplication.savedMovies = mAdapter.getData();
     }
+
+    void initDisplay() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point dimens = new Point();
+        display.getSize(dimens);
+
+        Log.d(LOG_TAG, "dimens : " + dimens.x + " " + dimens.y);
+
+        TmdbDemoApplication.displayHeight = dimens.y;
+        TmdbDemoApplication.displayWidth = dimens.x;
+
+
+        Log.d(LOG_TAG, "dimens : " + TmdbDemoApplication.displayHeight
+                + " " + TmdbDemoApplication.displayWidth);
+    }
+
+    void initRecyclerView() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new RecylcerDividersDecorator(Color.RED));
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mAdapter = new MyRecyclerAdapterPortrait();
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter = new MyRecyclerAdapterLand();
+            mRecyclerView.setAdapter(mAdapter);
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point dimens = new Point();
-        display.getSize(dimens);
+        queue = TmdbDemoApplication.queue;
 
-        Log.d(LOG_TAG, "diments : " + dimens.x + " " + dimens.y);
+        initDisplay();
+        currentLang = Locale.getDefault().getLanguage();
+        initRecyclerView();
 
-        //dimens.x = (int)(dimens.x / (float) getApplicationContext().getResources().getDisplayMetrics().density);
-        //dimens.y = (int)(dimens.y / (float) getApplicationContext().getResources().getDisplayMetrics().density);
-
-        TmdbDemoApplication.displayHeight = dimens.y;
-        TmdbDemoApplication.displayWidth = dimens.x;
-
-
-        Log.d(LOG_TAG, "diments : " + TmdbDemoApplication.displayHeight
-                + " " + TmdbDemoApplication.displayWidth);
-
-
-        mBundle = new Bundle();
-        mBundle.putString(LANG, Locale.getDefault().getLanguage());
-        mBundle.putInt("PAGE_ID", 1);
-
-        if (getSupportLoaderManager().getLoader(0) == null) {
-            Log.d(LOG_TAG, "don't exists!!!");
-
-            mLoader = getSupportLoaderManager().initLoader(0, mBundle, this);
-
-            mLoader.onContentChanged();
+        if (savedInstanceState == null) {
+            nextPage = 1;
+            pageInProcess = -1;
+            addPageToQueue(1);
         } else {
-            Log.d(LOG_TAG, "exists???");
+            nextPage = savedInstanceState.getInt(KEY_NEXT_PAGE);
+            mAdapter.init(TmdbDemoApplication.savedMovies);
+            pageInProcess = savedInstanceState.getInt(KEY_PAGE_IN_PROCESS);
 
-            mLoader = getSupportLoaderManager().initLoader(0, mBundle, this);
+            String previousLang = savedInstanceState.getString(KEY_PREVIOUS_LANG);
 
-            //mLoader = getSupportLoaderManager().getLoader(0);
+            if (!previousLang.equals(currentLang)) {
+                queue.clear();
+                pageInProcess = -1;
+                addPageToQueue(1);
+            }
         }
 
-        Vector<String> myDataset = recyclerInit(100);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-
-        mLayoutManager = new LinearLayoutManager(this);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mRecyclerView.addItemDecoration(new RecylcerDividersDecorator(Color.RED));
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mAdapter = new MyRecyclerAdapterPortrait();
-            mRecyclerView.setAdapter((MyRecyclerAdapterPortrait)mAdapter);
-        } else {
-            mAdapter = new MyRecyclerAdapterLand();
-            mRecyclerView.setAdapter((MyRecyclerAdapterLand)mAdapter);
-        }
-/*
         mRecyclerView.setOnScrollListener(
                 new RecyclerView.OnScrollListener() {
                     @Override
-                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        Log.d(LOG_TAG, dx + " " + dy);
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if (newState == SCROLL_STATE_IDLE) {
+                            Log.d(LOG_TAG, "stop scrolling");
+                            if (mAdapter.isNeededInDownloading()) {
+                                downloadNextPage();
+                            }
+
+                            Set<Integer> pagesNeededToUpd = mAdapter.getPagesNeededToUpd();
+                            if (pagesNeededToUpd.size() > 0) {
+                                addPageToQueue(pagesNeededToUpd.iterator().next());
+                            }
+                        }
                     }
                 }
         );
-*/
+        registerReceiver(receiver, intentFilter);
     }
 
-
-
-
-    private Vector<String> recyclerInit(int num) {
-        Vector<String> res = new Vector<>();
-
-        for (int w = 0; w < num; w++) {
-            res.addElement("item " + w);
-        }
-        return res;
-    }
-
-
-
+    @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        Loader<LoadResult<List<Movie>>> mLoader = null;
-
         Log.d(LOG_TAG, "starting ###");
 
-        mLoader = new PopularMoviesLoader(this, args);
-
-        return mLoader;
+        return new PopularMoviesLoader(this, args);
     }
 
-
+    @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
         Log.d(LOG_TAG, "onLoaderReset");
     }
 
+    @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> res) {
         Log.d(LOG_TAG, "res : " + res.resultType);
 
+        int numFilms = 0;
+
         if (res.resultType == ResultType.OK) {
+            int page = -1;
             for (Movie w : res.data) {
-                mAdapter.addItemToEnd(w);
+                page = w.page;
+                if (w.page == nextPage) {
+                    mAdapter.addItemToEnd(w);
+                } else {
+                    mAdapter.updItem((page - 1) * 20 + numFilms, w);
+                    numFilms++;
+                }
             }
+            Log.d(LOG_TAG, "page " + page);
+            if (page == nextPage) {
+                nextPage++;
+            }
+            queue.remove(page);
+            Set<Integer> pagesNeededToUpd = mAdapter.getPagesNeededToUpd();
+            pagesNeededToUpd.remove(page);
+            pageInProcess = -1;
+
+            loader.reset();
+            if (pagesNeededToUpd.size() > 0) {
+                addPageToQueue(pagesNeededToUpd.iterator().next());
+            } else {
+                startDownloading();
+            }
+        } else {
+            loader.reset();
+
+            if (res.resultType == ResultType.NO_INTERNET) {
+                Toast.makeText(this, "No internet", Toast.LENGTH_LONG).show();
+            }
+            if (res.resultType == ResultType.ERROR) {
+                Toast.makeText(this, "Error in downloading.", Toast.LENGTH_LONG).show();
+            }
+            pageInProcess = -1;
         }
-
     }
 
-
-
-    //int next = 1000;
-
-    /*
-    public void onClickBottom(View view) {
-
-
-
-        mAdapter.addItem("item " + next);
-        mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-        next++;
-
+    public void downloadNextPage() {
+        Log.d(LOG_TAG, "downloadNextPage !!!");
+        addPageToQueue(nextPage);
     }
-    */
+
+    void addPageToQueue(int page) {
+        queue.add(page);
+        startDownloading();
+    }
+
+    void startDownloading() {
+        Log.d(LOG_TAG, "startDownloading " + queue.size() + " " + pageInProcess);
+        if ((queue.size() > 0) && (pageInProcess == -1)) {
+            Iterator<Integer> it = queue.iterator();
+
+            Integer w = it.next();
+
+            Bundle mBundle = new Bundle();
+            mBundle.putString("LANG", currentLang);
+            mBundle.putInt("PAGE_ID", w);
+
+            Log.d(LOG_TAG, "startDownloading " + w);
+
+            pageInProcess = w;
+
+            mLoader = getSupportLoaderManager().restartLoader(0, mBundle, this);
+            mLoader.onContentChanged();
+        }
+    }
+
 }
