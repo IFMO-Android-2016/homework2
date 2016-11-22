@@ -1,7 +1,6 @@
 package ru.ifmo.droid2016.tmdb.api;
 
 import android.net.Uri;
-import android.util.Log;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -40,8 +39,7 @@ public final class TmdbApi {
                 .appendQueryParameter("language", lang)
                 .appendQueryParameter("page", String.valueOf(pageId))
                 .build();
-
-        Log.d("final_uri", uri.toString());
+        
         return (HttpsURLConnection) new URL(uri.toString()).openConnection();
     }
 
