@@ -41,6 +41,7 @@ public class MoviesDownloader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
         try {
             String language = Locale.getDefault().getLanguage();
             HttpURLConnection connection = TmdbApi.getPopularMoviesRequest(language, page);
+            Log.e("REQUEEEEST", connection.getURL().toString());
             InputStream inputStream = connection.getInputStream();
             String content = IOUtils.readToString(inputStream, "UTF-8");
             IOUtils.closeSilently(inputStream);
@@ -98,6 +99,5 @@ public class MoviesDownloader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
             e.printStackTrace();
         }
     }
-
 
 }

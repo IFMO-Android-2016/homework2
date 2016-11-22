@@ -4,13 +4,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ResponseParser {
     public static List<Movie> parser(JSONObject response) throws JSONException {
         JSONArray results = response.getJSONArray("results");
-        List<Movie> parsed = new LinkedList<>();
+        List<Movie> parsed = new ArrayList<>();
         for (int i = 0; i < results.length(); i++){
             JSONObject movieJSON = results.getJSONObject(i);
             Movie movie = new Movie(movieJSON.getString("poster_path"),

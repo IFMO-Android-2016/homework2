@@ -1,5 +1,8 @@
 package ru.ifmo.droid2016.tmdb.myapplication;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -19,6 +22,7 @@ import ru.ifmo.droid2016.tmdb.myapplication.loader.ResultType;
 import ru.ifmo.droid2016.tmdb.myapplication.model.Movie;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,9 +30,6 @@ import java.util.Locale;
  * Экран, отображающий список популярных фильмов из The Movie DB.
  */
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
-
-    private final String KEY_RECYCLER_STATE = "recycler_state";
-    private static Bundle mBundleRecyclerViewState;
 
     private String lastLang = Locale.getDefault().getLanguage();
 
@@ -50,14 +51,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //here should be request permissions
         progressView = (ProgressBar) findViewById(R.id.progress);
         errorTextView = (TextView) findViewById(R.id.error_text);
-
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        progressView.setVisibility(View.VISIBLE);
-        errorTextView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
+        if (adapter == null) {
+            adapter = new MoviesRecyclerAdapter(this);
+            recyclerView.setAdapter(adapter);
+        }
 
         //creating folder on sd card
         File folder = new File(MoviesDownloader.directory.toString());
@@ -65,32 +65,39 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Log.d("creating folder", "" + folder.mkdirs());
         }
 
-        final Bundle loaderArgs = getIntent().getExtras();
-        getSupportLoaderManager().initLoader(0, loaderArgs, this).forceLoad();
+        if (savedInstanceState == null || !savedInstanceState.containsKey("last language")
+                || !savedInstanceState.getString("last language").equals(Locale.getDefault().getLanguage())
+                || !savedInstanceState.containsKey("movies")) {
+
+            displayLoading();
+            if(isOnline()) {
+                final Bundle loaderArgs = getIntent().getExtras();
+                getSupportLoaderManager().initLoader(0, loaderArgs, this).forceLoad();
+            } else {
+                displayError(ResultType.NO_INTERNET);
+            }
+        } else{
+            List<Movie> movies = savedInstanceState.getParcelableArrayList("movies");
+            assert movies != null;
+            adapter.setMovies(movies);
+        }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        // save RecyclerView state
-        mBundleRecyclerViewState = new Bundle();
-        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
-        lastLang = Locale.getDefault().getLanguage();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("last language", Locale.getDefault().getLanguage());
+        if (adapter.getItemCount() > 0)
+            outState.putParcelableArrayList("movies", (ArrayList<? extends Parcelable>) adapter.getMovies());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // restore RecyclerView state
-        if (mBundleRecyclerViewState != null) {
-            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-            recyclerView.getLayoutManager().onRestoreInstanceState(listState);
-        }
         //language changed
-        if (!lastLang.equals(Locale.getDefault().getLanguage())){
+        if (!lastLang.equals(Locale.getDefault().getLanguage())) {
             final Bundle loaderArgs = getIntent().getExtras();
+            lastLang = Locale.getDefault().getLanguage();
             getSupportLoaderManager().restartLoader(0, loaderArgs, this).forceLoad();
         }
     }
@@ -116,10 +123,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void display(List<Movie> movies) {
-        if (adapter == null) {
-            adapter = new MoviesRecyclerAdapter(this);
-            recyclerView.setAdapter(adapter);
-        }
         adapter.setMovies(movies);
         progressView.setVisibility(View.GONE);
         errorTextView.setVisibility(View.GONE);
@@ -143,5 +146,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             errorTextView.setText(R.string.error);
         }
     }
+
+    private void displayLoading(){
+        progressView.setVisibility(View.VISIBLE);
+        errorTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
 
 }

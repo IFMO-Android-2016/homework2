@@ -14,6 +14,7 @@ import ru.ifmo.droid2016.tmdb.myapplication.loader.MoviesDownloader;
 import ru.ifmo.droid2016.tmdb.myapplication.model.Movie;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +24,7 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAdapter.M
 
 
     @NonNull
-    private List<Movie> movies = Collections.emptyList();
+    private List<Movie> movies = new ArrayList<>();
 
     MoviesRecyclerAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
@@ -32,6 +33,9 @@ class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAdapter.M
     void setMovies(@NonNull List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
+    }
+    List<Movie> getMovies(){
+        return movies;
     }
 
     @Override
