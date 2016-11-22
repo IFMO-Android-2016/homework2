@@ -74,12 +74,17 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
                         .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
                 if (wifi.isAvailable() || mobile.isAvailable()) {
                     Log.d(LOG_TAG, "Available");
+                    mAdapter.updInternetState(true);
+
+                    for (Integer w : mAdapter.pagesWithError) {
+                        queue.add(w);
+                    }
+                    mAdapter.pagesWithError.clear();
+
                     startDownloading();
                 }
 
             }
-
-
         }
     };
 
@@ -124,6 +129,17 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(receiver, intentFilter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,15 +158,18 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
             addPageToQueue(1);
         } else {
             nextPage = savedInstanceState.getInt(KEY_NEXT_PAGE);
-            mAdapter.init(TmdbDemoApplication.savedMovies);
+            mAdapter.init(TmdbDemoApplication.savedMovies, TmdbDemoApplication.savedPagesWithError);
             pageInProcess = savedInstanceState.getInt(KEY_PAGE_IN_PROCESS);
 
             String previousLang = savedInstanceState.getString(KEY_PREVIOUS_LANG);
 
             if (!previousLang.equals(currentLang)) {
                 queue.clear();
+                mLoader.reset();
                 pageInProcess = -1;
                 addPageToQueue(1);
+
+                mAdapter.pagesWithError.clear();
             }
         }
 
@@ -161,9 +180,6 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
                         super.onScrollStateChanged(recyclerView, newState);
                         if (newState == SCROLL_STATE_IDLE) {
                             Log.d(LOG_TAG, "stop scrolling");
-                            if (mAdapter.isNeededInDownloading()) {
-                                downloadNextPage();
-                            }
 
                             Set<Integer> pagesNeededToUpd = mAdapter.getPagesNeededToUpd();
                             if (pagesNeededToUpd.size() > 0) {
@@ -173,7 +189,6 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
                     }
                 }
         );
-        registerReceiver(receiver, intentFilter);
     }
 
     @Override
@@ -209,7 +224,12 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
             if (page == nextPage) {
                 nextPage++;
             }
+
+            Log.d(LOG_TAG, "nextPage " + nextPage);
+
             queue.remove(page);
+            mAdapter.pagesWithError.remove(page);
+
             Set<Integer> pagesNeededToUpd = mAdapter.getPagesNeededToUpd();
             pagesNeededToUpd.remove(page);
             pageInProcess = -1;
@@ -217,19 +237,49 @@ implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
             loader.reset();
             if (pagesNeededToUpd.size() > 0) {
                 addPageToQueue(pagesNeededToUpd.iterator().next());
-            } else {
-                startDownloading();
             }
+            startDownloading();
         } else {
             loader.reset();
 
+            mAdapter.addPageWithError(pageInProcess);
+            queue.remove(pageInProcess);
+
             if (res.resultType == ResultType.NO_INTERNET) {
+                mAdapter.updInternetState(false);
+
+                if (pageInProcess != nextPage) {
+                    for (int w = 0; w < 20; w++) {
+                        mAdapter.updItem((pageInProcess - 1) * 20 + w,
+                                new Movie("", "", "", "", nextPage, ""));
+                    }
+                }
+
                 Toast.makeText(this, "No internet", Toast.LENGTH_LONG).show();
             }
             if (res.resultType == ResultType.ERROR) {
+                if (pageInProcess == nextPage) {
+                    for (int w = 0; w < 20; w++) {
+                        mAdapter.addItemToEnd(new Movie("", "", "", "", nextPage, ""));
+                    }
+                    nextPage++;
+                } else {
+                    for (int w = 0; w < 20; w++) {
+                        mAdapter.updItem((pageInProcess - 1) * 20 + w,
+                                new Movie("", "", "", "", nextPage, ""));
+                    }
+                }
+
                 Toast.makeText(this, "Error in downloading.", Toast.LENGTH_LONG).show();
             }
             pageInProcess = -1;
+
+            Set<Integer> pagesNeededToUpd = mAdapter.getPagesNeededToUpd();
+
+            if (pagesNeededToUpd.size() > 0) {
+                addPageToQueue(pagesNeededToUpd.iterator().next());
+            }
+            startDownloading();
         }
     }
 

@@ -56,9 +56,9 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
     public LoadResult<List<Movie>> loadInBackground() {
         Log.d(LOG_TAG, " loadInBackground");
 
-        try {
-            Thread.sleep(2000);
-        }catch (Exception ex) {};
+//        try {
+//            Thread.sleep(2000);
+//        }catch (Exception ex) {};
 
         HttpsURLConnection connection;
         try {

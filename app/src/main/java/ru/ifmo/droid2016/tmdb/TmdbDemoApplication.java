@@ -8,6 +8,7 @@ import android.view.Display;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,7 +23,8 @@ public class TmdbDemoApplication extends Application {
     public static int displayWidth;
 
     public static Vector<Movie> savedMovies = null;
-    public static Set<Integer> queue = new TreeSet<>();
+    public static Set<Integer> queue = new HashSet<>();
+    public static Set<Integer> savedPagesWithError = new HashSet<>();
 
     @Override
     public void onCreate() {

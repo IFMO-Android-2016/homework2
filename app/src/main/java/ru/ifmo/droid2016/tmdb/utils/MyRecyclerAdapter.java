@@ -28,9 +28,10 @@ public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerA
     protected final int MIN_NUM_REST_FILMS = 10;
     protected final String baseURL = "https://image.tmdb.org/t/p/";
 
-    protected boolean toDownload = false;
+    protected boolean isInternetAvailable = true;
+
     protected Set<Integer> pagesNeededToUpd = new HashSet<>();
-    protected Set<Integer> pagesWithError;
+    public Set<Integer> pagesWithError = new HashSet<>();
 
     protected Vector<Movie> movies = new Vector<>();
     //protected Vector<>
@@ -68,19 +69,15 @@ public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerA
         movies = new Vector<>();
     }
 
-    public void init(Vector<Movie> films) {
-        movies = films;
-        if (films == null) {
-            movies = new Vector<>();
+    public void init(Vector<Movie> movies, Set<Integer> pagesWithError) {
+        this.movies = movies;
+        this.pagesWithError = pagesWithError;
+        if (movies == null) {
+            this.movies = new Vector<>();
         }
-    }
-
-    public boolean isNeededInDownloading() {
-        if (toDownload) {
-            toDownload = false;
-            return true;
+        if (pagesWithError == null) {
+            this.pagesWithError = new HashSet<>();
         }
-        return false;
     }
 
     public void updItem(int pos, Movie film) {
@@ -122,11 +119,34 @@ public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerA
         holder.mSimpleDraweeView.requestLayout();
     }
 
+    protected void setErrorItem(MyRecyclerAdapter.ViewHolder holder) {
+        holder.progressBar.setVisibility(View.INVISIBLE);
+        holder.mSimpleDraweeView.setVisibility(View.INVISIBLE);
+        holder.localizedTitle.setVisibility(View.INVISIBLE);
+        holder.overviewText.setVisibility(View.INVISIBLE);
+
+        holder.imageErrorView.setVisibility(View.VISIBLE);
+
+        holder.mSimpleDraweeView.getLayoutParams().width = 100;
+        holder.mSimpleDraweeView.getLayoutParams().height = 100;
+        holder.mSimpleDraweeView.requestLayout();
+    }
+
     @Override
     public void onBindViewHolder(MyRecyclerAdapter.ViewHolder holder, int position) {
+        holder.imageErrorView.setVisibility(View.INVISIBLE);
 
         if (position == movies.size()) {
-            setItemInDownload(holder);
+            if (isInternetAvailable) {
+                setItemInDownload(holder);
+            } else {
+                setErrorItem(holder);
+            }
+            return;
+        }
+
+        if (pagesWithError.contains(movies.elementAt(position).page)) {
+            setErrorItem(holder);
             return;
         }
 
@@ -148,8 +168,20 @@ public abstract class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerA
         Log.d(LOG_TAG, str);
 
         if (movies.size() - position <= MIN_NUM_REST_FILMS) {
-            toDownload = true;
+            if (movies.size() > 0) {
+                pagesNeededToUpd.add(movies.elementAt(movies.size() - 1).page + 1);
+            }
         }
+    }
+
+    public void updInternetState(boolean state) {
+        isInternetAvailable = state;
+        notifyItemChanged(movies.size());
+    }
+
+    public void addPageWithError(int page) {
+        pagesNeededToUpd.remove(page);
+        pagesWithError.add(page);
     }
 
     @Override
