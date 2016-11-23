@@ -139,6 +139,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements
 
         String oldLang = savedInstanceState.getString(LANG_TAG, " ");
         lastPage = savedInstanceState.getInt(LAST_PAGE_TAG, 1);
+        pageLoaded = savedInstanceState.getInt(PAGE_LOADED_TAG, 0);
         if (language.equals(oldLang)) {
             movies.addAll(savedMovies);
             mAdapter.notifyDataSetChanged();
