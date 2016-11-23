@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TMDB Demo</string>
+    <string name="no_inernet">No Internet</string>
+    <string name="error">Error</string>
 </resources>
