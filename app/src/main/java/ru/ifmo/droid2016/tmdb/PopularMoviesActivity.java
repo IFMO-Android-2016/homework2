@@ -28,7 +28,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
     private RecyclerView recyclerView;
     private ProgressBar progressView;
     private TextView errorTextView;
-    private String language = null;
 
     private static final String LANGUAGE = "LANGUAGE";
 
@@ -54,7 +53,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
             recyclerView.setAdapter(adapter);
         }
 
-        language = getResources().getConfiguration().locale.getLanguage();
+        String language = getResources().getConfiguration().locale.getLanguage();
 
         final Bundle loaderArgs = new Bundle();
         loaderArgs.putString(LANGUAGE, language);

@@ -27,13 +27,15 @@
         android:id="@+id/movie_original_title"
         android:layout_below="@+id/movie_localized_title"
         android:textSize="16sp"
-        android:layout_marginLeft="12dp"/>
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/movie_image"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/movie_overview"
-        android:layout_below="@+id/movie_original_title"
+        android:layout_below="@+id/movie_image"
         android:textSize="12sp"
-        android:layout_marginLeft="12dp"/>
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="20dp"/>
 </RelativeLayout>

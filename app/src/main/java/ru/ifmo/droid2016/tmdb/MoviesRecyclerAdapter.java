@@ -51,6 +51,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
         final Movie movie = movies.get(position);
         holder.originalTitleView.setText(movie.originalTitle);
         holder.localizedTitleView.setText(movie.localizedTitle);
+        holder.overviewView.setText(movie.overviewText);
         holder.posterView.setImageURI(movie.posterPath);
     }
 
