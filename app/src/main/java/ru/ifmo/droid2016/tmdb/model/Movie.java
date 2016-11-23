@@ -3,6 +3,8 @@ package ru.ifmo.droid2016.tmdb.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import ru.ifmo.droid2016.tmdb.api.TmdbApi;
+
 /**
  * Информация о фильме, полученная из The Movie DB API
  */
@@ -38,7 +40,7 @@ public class Movie {
                  String originalTitle,
                  String overviewText,
                  String localizedTitle) {
-        this.posterPath = posterPath;
+        this.posterPath = TmdbApi.getImageURI() + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
