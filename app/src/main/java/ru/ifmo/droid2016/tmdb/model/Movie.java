@@ -43,4 +43,14 @@ public class Movie {
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
     }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "posterPath='" + posterPath + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", overviewText='" + overviewText + '\'' +
+                ", localizedTitle='" + localizedTitle + '\'' +
+                '}';
+    }
 }
