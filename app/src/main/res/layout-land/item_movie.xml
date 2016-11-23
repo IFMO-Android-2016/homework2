@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:padding="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/movie_image"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:viewAspectRatio="0.66"/>
+
+    <TextView
+        android:id="@+id/movie_title"
+        android:layout_width="wrap_content"
+        app:layout_widthPercent="50%"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/movie_image"
+        android:layout_toRightOf="@id/movie_image"
+        android:layout_marginTop="12dp"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/movie_desc"
+        android:layout_width="wrap_content"
+        app:layout_widthPercent="50%"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/movie_image"
+        android:layout_below="@id/movie_title"
+        android:layout_marginTop="12dp"
+        android:textSize="14sp"
+        android:textStyle=""/>
+
+</android.support.percent.PercentRelativeLayout>
