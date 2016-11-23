@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ru.ifmo.droid2016.tmdb.utils.StretchWidthType">
+
+    </declare-styleable>
+</resources>
