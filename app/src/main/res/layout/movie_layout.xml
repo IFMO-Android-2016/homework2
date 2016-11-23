@@ -1,75 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="7dp">
 
-    <LinearLayout
-        android:id="@+id/content"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/poster"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="7dp"
-        android:paddingBottom="7dp"
-        android:paddingTop="7dp"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp">
+        android:text="@string/lul"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/poster"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LUL"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/overview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="overview of this shitty movie" />
-    </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/error"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/overview"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp"
-        android:paddingTop="7dp"
-        android:paddingBottom="7dp">
-        <TextView
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:id="@+id/internet"
-            android:text="@string/no_internet_connection_found"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <TextView
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:id="@+id/unknown"
-            android:text="@string/unknown_error_occurred"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <Button
-            android:onClick="onClickTryAgain"
-            android:layout_gravity="center"
-            android:text="@string/try_again"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</FrameLayout>
+        android:text="@string/overview_of_this_shitty_movie" />
+</LinearLayout>

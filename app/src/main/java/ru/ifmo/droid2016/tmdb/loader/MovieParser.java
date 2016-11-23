@@ -1,7 +1,7 @@
 package ru.ifmo.droid2016.tmdb.loader;
 
 import android.util.JsonReader;
-import android.util.Log;
+import android.util.JsonToken;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,18 +15,20 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
  * Created by ghost3432 on 09.11.16.
  */
 
-public class Parser {
-    private static final String TAG = Parser.class.getSimpleName();
+class MovieParser {
+    private static final String TAG = MovieParser.class.getSimpleName();
+    private static int totalPages = Integer.MAX_VALUE, totalResults = Integer.MAX_VALUE;
 
-    static List<Movie> readJson(InputStream in) throws IOException {
+    static List<Movie> readJson(InputStream in) throws IOException, BadResponseException {
         List<Movie> result = null;
         JsonReader reader = new JsonReader(new InputStreamReader(in));
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             reader.beginObject();
             while (reader.hasNext()) {
                 switch (reader.nextName()) {
                     case "page":
-                        reader.nextLong();//TODO
+                        reader.nextLong();
                         break;
 
                     case "results":
@@ -34,27 +36,33 @@ public class Parser {
                         break;
 
                     case "total_results":
-                        reader.nextInt();
+                        totalResults = reader.nextInt();
                         break;
 
                     case "total_pages":
-                        reader.nextInt();//TODO
+                        totalPages = reader.nextInt();
                         break;
 
                     default:
-                        Log.wtf(TAG, "something wrong at readJson()");
                         reader.skipValue();
                 }
             }
             reader.endObject();
+        } catch (IllegalStateException x) {
+            throw new BadResponseException(x);
         } finally {
+            //noinspection ThrowFromFinallyBlock
             reader.close();
+        }
+
+        if (result == null) {
+            throw new BadResponseException("can't find key \"results\"");
         }
 
         return result;
     }
 
-    private static List<Movie> readResults(JsonReader reader) throws IOException {
+    private static List<Movie> readResults(JsonReader reader) throws IOException, BadResponseException {
         List<Movie> result = new ArrayList<>(20);
 
         reader.beginArray();
@@ -66,7 +74,7 @@ public class Parser {
         return result;
     }
 
-    private static Movie readMovie(JsonReader reader) throws IOException {
+    private static Movie readMovie(JsonReader reader) throws IOException, BadResponseException {
         String posterPath = null;
         String originalTitle = null;
         String overviewText = null;
@@ -75,7 +83,11 @@ public class Parser {
         while (reader.hasNext()) {
             switch (reader.nextName()) {
                 case "poster_path":
-                    posterPath = reader.nextString();
+                    if (reader.peek() == JsonToken.STRING) {
+                        posterPath = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
                     break;
 
                 case "original_title":
@@ -96,6 +108,19 @@ public class Parser {
         }
         reader.endObject();
 
+        if (originalTitle == null || overviewText == null || localizedTitle == null) {
+            throw new BadResponseException("one of the fields is null: " + originalTitle + "/" +
+                    overviewText + "/" + localizedTitle);
+        }
+
         return new Movie(posterPath, originalTitle, overviewText, localizedTitle);
+    }
+
+    static int getTotalPages() {
+        return totalPages;
+    }
+
+    static int getTotalResults() {
+        return totalResults;
     }
 }

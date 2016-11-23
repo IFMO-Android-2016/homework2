@@ -20,25 +20,31 @@ import ru.ifmo.droid2016.tmdb.utils.IOUtils;
  */
 
 public class MovieLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
+    private static final int RESULTS_PER_PAGE = 20;
     private final String TAG = MovieLoader.class.getSimpleName();
 
-    private long page;
+    private volatile long page;
     private String locale = Locale.getDefault().getLanguage();
     private List<Movie> movieList = new ArrayList<>(100);
-    private int lastLoadedPage = 0;
+    private volatile boolean forceReload = false;
 
     public MovieLoader(Context context) {
         super(context);
         page = 1;
     }
 
-    public MovieLoader(Context context, long page) {
-        super(context);
-        this.page = page;
-    }
-
     @Override
     public LoadResult<List<Movie>> loadInBackground() {
+        if (forceReload) {
+            movieList = new ArrayList<>(100);
+            page = 1;
+            forceReload = false;
+        }
+        if (page == 0 || page > MovieParser.getTotalPages()) {
+            return new LoadResult<>(ResultType.LAST_PAGE, movieList);
+        }
+//        Log.i(TAG, String.valueOf(page));
+
         List<Movie> data = null;
         ResultType resultType = ResultType.ERROR;
         HttpURLConnection connection = null;
@@ -49,18 +55,22 @@ public class MovieLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream in = connection.getInputStream();
-                data = Parser.readJson(in);
+                data = MovieParser.readJson(in);
                 resultType = ResultType.OK;
             } else {
                 resultType = ResultType.ERROR;
             }
 
         } catch (IOException e) {
+            e.printStackTrace();
             if (IOUtils.isConnectionAvailable(getContext(), false)) {
                 resultType = ResultType.ERROR;
             } else {
                 resultType = ResultType.NO_INTERNET;
             }
+        } catch (BadResponseException e) {
+            e.printStackTrace();
+            resultType = ResultType.ERROR;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -74,24 +84,24 @@ public class MovieLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
                 movieList.addAll(data);
             }
         }
-        Log.i(TAG, "OK");
         return new LoadResult<>(resultType, movieList);
     }
 
     public void forceLoad(int entry) {
-        page = 1 + entry / 20;
-        if (lastLoadedPage == page) {
-            page ++;
+//        Log.i(TAG, entry + " vs " + MovieParser.getTotalResults());
+        if (entry >= MovieParser.getTotalResults()) {
+            page = 0;
+        } else {
+            page = 1 + entry / RESULTS_PER_PAGE;
         }
-        lastLoadedPage = (int) page;
         super.forceLoad();
     }
 
-    public String getLocale() {
-        return locale;
-    }
-
     public void setLocale(String locale) {
-        this.locale = locale;
+        if (!this.locale.equals(locale)) {
+            this.locale = locale;
+            this.forceReload = true;
+            forceLoad();
+        }
     }
 }

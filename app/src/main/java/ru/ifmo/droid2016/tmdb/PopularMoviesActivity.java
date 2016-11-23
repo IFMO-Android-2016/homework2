@@ -1,6 +1,7 @@
 package ru.ifmo.droid2016.tmdb;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,6 +17,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ru.ifmo.droid2016.tmdb.loader.LoadResult;
 import ru.ifmo.droid2016.tmdb.loader.MovieLoader;
@@ -34,6 +35,7 @@ public class PopularMoviesActivity extends AppCompatActivity
     private RecyclerView movies;
     private List<Movie> movieList = new ArrayList<>();
     private MovieAdapter adapter;
+    @Nullable
     private MovieLoader loader;
 
     @Override
@@ -49,29 +51,29 @@ public class PopularMoviesActivity extends AppCompatActivity
         movies = (RecyclerView) findViewById(R.id.movies);
         movies.setAdapter(adapter = new MovieAdapter());
         movies.setLayoutManager(new LinearLayoutManager(this));
+        //noinspection deprecation
         movies.addItemDecoration(
                 new RecylcerDividersDecorator(getResources().getColor(android.R.color.darker_gray)));
+        movies.setItemAnimator(null);
     }
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        Log.i("lol", "onCreateLoader");
+//        Log.i("lul", "onCreateLoader");
         return new MovieLoader(this);
     }
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> result) {
-        Log.i("kek", "loaded");
+//        Log.i("kek", "loaded");
         switch (result.resultType) {
-            case OK:
-                movieList = result.data;
-                adapter.onLoad(true);
-                break;
-
             case ERROR:
             case NO_INTERNET:
                 adapter.error = result.resultType;
-                adapter.notifyDataSetChanged();
+                //no break here
+            case OK:
+                movieList = result.data;
+                adapter.onLoad(true);
                 break;
 
             case LAST_PAGE:
@@ -83,37 +85,60 @@ public class PopularMoviesActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
-        Log.i("kek", "reset");
+//        Log.i("kek", "reset");
     }
 
     public void onClickTryAgain(View view) {
         adapter.error = null;
         adapter.notifyItemChanged(adapter.count);
-        loader.forceLoad();
+        if (loader != null) {
+            loader.forceLoad();
+        }
     }
 
     class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+        private final int MOVIE = 1;
+        private final int PROGRESS_BAR = 2;
+        private final int ERROR = 3;
+
         private int count = 0;
         private ResultType error = null;
         private boolean showProgressBar = true;
 
         @Override
+        public int getItemViewType(int position) {
+            if (position < count) {
+                return MOVIE;
+            } else {
+                if (error == null) {
+                    return PROGRESS_BAR;
+                } else {
+                    return ERROR;
+                }
+            }
+        }
+
+        @Override
         public MovieAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(getLayoutInflater().inflate(R.layout.movie_layout, parent, false));
+            switch (viewType) {
+                case MOVIE:
+                    return new ViewHolder((ViewGroup) getLayoutInflater()
+                            .inflate(R.layout.movie_layout, parent, false), viewType);
+                case PROGRESS_BAR:
+                    return new ViewHolder((ProgressBar) getLayoutInflater()
+                            .inflate(R.layout.progress_bar_layout, parent, false), viewType);
+                case ERROR:
+                    return new ViewHolder((ViewGroup) getLayoutInflater()
+                            .inflate(R.layout.error_layout, parent, false), viewType);
+                default:
+                    Log.wtf(TAG, "onCreateViewHolder/" + viewType);
+                    return null;
+            }
         }
 
         @Override
         public void onBindViewHolder(MovieAdapter.ViewHolder holder, int position) {
-            if (position < count) {
-                holder.showContent(movieList.get(position));
-            } else {
-                if (error == null) {
-                    holder.showProgressBar();
-                    loader.forceLoad(position);
-                } else {
-                    holder.showError(error);
-                }
-            }
+            holder.lul(position, error);
         }
 
         @Override
@@ -121,78 +146,90 @@ public class PopularMoviesActivity extends AppCompatActivity
             return count + (showProgressBar ? 1 : 0);   // +1 progress bar
         }
 
-        public void onLoad(boolean b) {
+        void onLoad(boolean b) {
             showProgressBar = b;
             count = movieList.size();
             notifyDataSetChanged();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            private final ViewGroup itemView;
+            private final int viewType;
+            private SimpleDraweeView poster;
+            private TextView title;
+            private TextView overview;
+            private TextView textError;
 
-            private final LinearLayout content, error;
-            private final ProgressBar progress;
-            private final SimpleDraweeView poster;
-            private final TextView title, overview, internet, unknown;
-
-            public ViewHolder(View itemView) {
+            ViewHolder(ViewGroup itemView, int viewType) {
                 super(itemView);
-                this.itemView = (ViewGroup) itemView;
+                this.viewType = viewType;
 
-                content = (LinearLayout) this.itemView.findViewById(R.id.content);
-                poster = (SimpleDraweeView) this.itemView.findViewById(R.id.poster);
-                title = (TextView) this.itemView.findViewById(R.id.title);
-                overview = (TextView) this.itemView.findViewById(R.id.overview);
-                progress = (ProgressBar) this.itemView.findViewById(R.id.progress);
+                switch (viewType) {
+                    case MOVIE:
+                        poster = (SimpleDraweeView) this.itemView.findViewById(R.id.poster);
+                        title = (TextView) this.itemView.findViewById(R.id.title);
+                        overview = (TextView) this.itemView.findViewById(R.id.overview);
 
-                error = (LinearLayout) this.itemView.findViewById(R.id.error);
-                internet = (TextView) this.itemView.findViewById(R.id.internet);
-                unknown = (TextView) this.itemView.findViewById(R.id.unknown);
+                        poster.setAspectRatio(2.0f / 3);
+                        break;
 
-                poster.setAspectRatio(2.0f / 3);
+                    case ERROR:
+                        textError = (TextView) this.itemView.findViewById(R.id.textError);
+                }
             }
 
-            void showProgressBar() {
-                content.setVisibility(View.GONE);
-                error.setVisibility(View.GONE);
-                progress.setVisibility(View.VISIBLE);
+            ViewHolder(ProgressBar progress, int viewType) {
+                super(progress);
+
+                this.viewType = viewType;
             }
 
             void showContent(Movie movie) {
-                content.setVisibility(View.VISIBLE);
-                error.setVisibility(View.GONE);
-                progress.setVisibility(View.GONE);
-
                 poster.setImageURI(movie.posterPath);
                 title.setText(movie.localizedTitle);
                 overview.setText(movie.overviewText);
 
-                Log.i(TAG, movie.posterPath);
+//                Log.i(TAG, movie.posterPath);
             }
 
             void showError(ResultType resultType) {
-                content.setVisibility(View.GONE);
-                error.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-
                 switch (resultType) {
                     case NO_INTERNET:
-                        unknown.setVisibility(View.GONE);
-                        internet.setVisibility(View.VISIBLE);
+                        textError.setText(R.string.no_internet_connection_found);
                         break;
 
                     case ERROR:
-                        internet.setVisibility(View.GONE);
-                        unknown.setVisibility(View.VISIBLE);
+                        textError.setText(R.string.unknown_error_occurred);
                         break;
+                }
+            }
+
+            void lul(int position, ResultType error) {
+                switch (viewType) {
+                    case MOVIE:
+                        showContent(movieList.get(position));
+                        return;
+
+                    case PROGRESS_BAR:
+                        if (loader != null) {
+                            loader.forceLoad(position);
+                        }
+                        return;
+
+                    case ERROR:
+                        showError(error);
+                        //noinspection UnnecessaryReturnStatement
+                        return;
                 }
             }
         }
     }
 
     @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume");
-        super.onResume();
+    protected void onStart() {
+        if (loader != null) {
+            loader.setLocale(Locale.getDefault().getLanguage());
+        }
+        Log.d(TAG, "onStart");
+        super.onStart();
     }
 }
