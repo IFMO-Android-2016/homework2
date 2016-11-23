@@ -59,7 +59,7 @@ public class PopularMoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>
 
         try {
             connection = TmdbApi.getPopularMoviesRequest(language, page);
-            Log.e(TAG, "Performing request: " + (connection.getURL()).toString());
+            Log.d(TAG, "Performing request: " + (connection.getURL()).toString());
 
             stethoManager.preConnect(connection, null);
             connection.connect();

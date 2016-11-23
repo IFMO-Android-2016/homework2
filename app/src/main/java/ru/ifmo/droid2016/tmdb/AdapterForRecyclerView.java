@@ -55,6 +55,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MovieViewHold
         notifyDataSetChanged();
     }
 
+    @NonNull
     ArrayList<Movie> getMovies(){
         return movies;
     }

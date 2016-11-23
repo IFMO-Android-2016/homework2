@@ -36,12 +36,11 @@ public class PopularMoviesActivity
         extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
-    private static final int ITEMS_ON_THE_PAGE = 20;
-    private int nNewPage = 1;
-    private static String language = (String) Locale.getDefault().getLanguage();
-    private static boolean isLanguageChanged = false;
-    private final String KEY_RECYCLER_STATE = "recycler_state";
-    private static Bundle mBundleRecyclerViewState;
+    private static final int ITEMS_ON_THE_PAGE  = 20;
+    private int              nNewPage           = 1;
+    private static String    language           = (String) Locale.getDefault().getLanguage();
+    private static boolean   isLanguageChanged  = false;
+    private static boolean   thereIsTheInternet = false;
 
     private RecyclerView recyclerView;
     private TextView errorTextView;
@@ -53,7 +52,7 @@ public class PopularMoviesActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
-        Log.e(TAG, "on create");
+        Log.d(TAG, "onCreate");
         progressView = (ProgressBar) findViewById(R.id.progress_bar);
         errorTextView = (TextView) findViewById(R.id.error_text);
 
@@ -68,6 +67,7 @@ public class PopularMoviesActivity
                 LinearLayoutManager LLManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (LLManager.findLastVisibleItemPosition() >= (nNewPage * ITEMS_ON_THE_PAGE) - 5) {
                     nNewPage++;
+                    Log.d(TAG, "TRYING");
                     getSupportLoaderManager().initLoader(nNewPage, null, getCallback()).forceLoad();
                 }
             }
@@ -87,12 +87,15 @@ public class PopularMoviesActivity
             recyclerView.setVisibility(View.GONE);
 
             if (isOnline()) {
+                thereIsTheInternet = true;
                 final Bundle loaderArgs = getIntent().getExtras();
                 getSupportLoaderManager().initLoader(1, loaderArgs, this).forceLoad();
             } else {
+                thereIsTheInternet = false;
                 displayError(ResultType.NO_INTERNET);
             }
         } else {
+            thereIsTheInternet = true;
             ArrayList<Movie> movies = savedInstanceState.getParcelableArrayList("list movies");
             assert movies != null;
             adapter.setMovies(movies);
@@ -108,8 +111,10 @@ public class PopularMoviesActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("nNewPage", nNewPage);
-        outState.putParcelableArrayList("list movies", adapter.getMovies());
+        if (adapter.getItemCount() > 0 && thereIsTheInternet) {
+            outState.putParcelableArrayList("list movies", adapter.getMovies());
+            outState.putInt("nNewPage", nNewPage);
+        }
     }
 
     @Override
@@ -122,18 +127,19 @@ public class PopularMoviesActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e(TAG, "on pause");
-        mBundleRecyclerViewState = new Bundle();
+        Log.d(TAG, "onPause");
+        Bundle mBundleRecyclerViewState = new Bundle();
         Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        String KEY_RECYCLER_STATE = "recycler_state";
         mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "on resume");
+        Log.d(TAG, "onResume");
         if (!language.equals(Locale.getDefault().getLanguage())) {
-            Log.e(TAG, "language reloaded");
+            Log.d(TAG, "language reloaded");
             for (int i = 2; i <= nNewPage; i++) {
                 getSupportLoaderManager().destroyLoader(i);
             }
@@ -152,7 +158,9 @@ public class PopularMoviesActivity
         Log.d(TAG, "onLoadFinished: " + result);
         if (result.resultType == OK && result.data != null) {
             display(result.data);
+            thereIsTheInternet = true;
         } else {
+            thereIsTheInternet = false;
             displayError(result.resultType);
         }
     }
