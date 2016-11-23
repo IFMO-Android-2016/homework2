@@ -1,5 +1,6 @@
 package ru.ifmo.droid2016.tmdb.model;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -33,14 +34,17 @@ public class Movie {
      * Название фильма на языке пользователя.
      */
     public final @Nullable String localizedTitle;
+    public final @Nullable Bitmap image;
 
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
-                 String localizedTitle) {
+                 String localizedTitle,
+                 Bitmap image) {
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.image = image;
     }
 }
