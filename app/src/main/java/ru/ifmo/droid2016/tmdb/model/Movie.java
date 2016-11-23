@@ -11,34 +11,45 @@ public class Movie {
 
     /**
      * Path изображения постера фильма. Как из Path получить URL, описано здесь:
-     *
+     * <p>
      * https://developers.themoviedb.org/3/getting-started/languages
-     *
+     * <p>
      * В рамках ДЗ можно не выполнять отдельный запрос /configuration, а использовать
      * базовый URL для картинок: http://image.tmdb.org/t/p/ и
      */
-    public final @NonNull String posterPath;
+    public final
+    @NonNull
+    String posterPath;
+
+    private final @NonNull String baseURL = "https://image.tmdb.org/t/p/w500";
+
 
     /**
      * Название фильма на языке оригинала.
      */
-    public final @NonNull String originalTitle;
+    public final
+    @NonNull
+    String originalTitle;
 
     /**
      * Описание фильма на языке пользователя.
      */
-    public final @Nullable String overviewText;
+    public final
+    @Nullable
+    String overviewText;
 
     /**
      * Название фильма на языке пользователя.
      */
-    public final @Nullable String localizedTitle;
+    public final
+    @Nullable
+    String localizedTitle;
 
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
                  String localizedTitle) {
-        this.posterPath = posterPath;
+        this.posterPath = baseURL + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
