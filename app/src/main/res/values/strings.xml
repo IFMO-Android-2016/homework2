@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">TMDB Demo</string>
+    <string name="app_name">Popular Movies</string>
+    <string name="error_internet">Internet connection error</string>
+    <string name="error">Unexpected error</string>
 </resources>
