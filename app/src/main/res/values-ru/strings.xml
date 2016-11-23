@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TMDB Demo</string>
+    <string name="films_not_found">Фильмы не найдены</string>
+    <string name="no_inernet">Отсутствует интернет соединение</string>
+    <string name="error_text">Произошла ошибка во время скачивания</string>
+    <string name="try_again">Попытаться снова</string>
+</resources>
