@@ -230,6 +230,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         outState.putInt(PAGE_LOADED_TAG, pageLoaded);
         outState.putString(LANG_TAG, language);
+        outState.putInt(LAST_PAGE_TAG, lastPage);
         outState.putParcelableArrayList(MOVIES_ARRAY_TAG, movies);
         outState.putParcelable(SCROLL_TAG, mLayoutManager.onSaveInstanceState());
     }
