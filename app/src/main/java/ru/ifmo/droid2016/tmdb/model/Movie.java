@@ -34,13 +34,17 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
+    public final @Nullable String releaseDate;
+
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
-                 String localizedTitle) {
-        this.posterPath = posterPath;
+                 String localizedTitle,
+                 String releaseDate) {
+        this.posterPath = "http://image.tmdb.org/t/p/w500" + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.releaseDate = releaseDate;
     }
 }

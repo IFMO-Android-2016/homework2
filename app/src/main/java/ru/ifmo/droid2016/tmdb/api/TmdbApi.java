@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InterfaceAddress;
 import java.net.URL;
 
 /**
@@ -14,7 +15,7 @@ import java.net.URL;
 public final class TmdbApi {
 
     // TODO: Зарегистрироваться на https://www.themoviedb.org и получить свой собственный ключ
-    //private static final String API_KEY = "ee1c42c80c58d28bc54efc844b63d114";
+    private static final String API_KEY = "ccadf933b396d4dbc803d1d17c32448b";
 
     private static final Uri BASE_URI = Uri.parse("https://api.themoviedb.org/3");
 
@@ -28,8 +29,16 @@ public final class TmdbApi {
      *
      * @param lang язык пользователя
      */
-    public static HttpURLConnection getPopularMoviesRequest(String lang) throws IOException {
+    public static HttpURLConnection getPopularMoviesRequest(String lang, int page) throws IOException {
         // TODO
-        return (HttpURLConnection) new URL(BASE_URI.toString()).openConnection();
+        Uri uri = BASE_URI
+                .buildUpon()
+                .appendPath("movie")
+                .appendPath("popular")
+                .appendQueryParameter("api_key", API_KEY)
+                .appendQueryParameter("language", lang)
+                .appendQueryParameter("page", Integer.toString(page))
+                .build();
+        return (HttpURLConnection) new URL(uri.toString()).openConnection();
     }
 }
