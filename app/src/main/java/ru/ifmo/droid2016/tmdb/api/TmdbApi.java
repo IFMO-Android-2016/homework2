@@ -34,6 +34,6 @@ public final class TmdbApi {
                 appendQueryParameter("api_key", API_KEY).
                 appendQueryParameter("language", lang).
                 appendQueryParameter("page", "1").build();
-        return (HttpURLConnection) new URL(BASE_URI.toString()).openConnection();
+        return (HttpURLConnection) new URL(uri.toString()).openConnection();
     }
 }

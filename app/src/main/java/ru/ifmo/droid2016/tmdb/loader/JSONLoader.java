@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,27 +26,36 @@ import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 
 public class JSONLoader extends AsyncTaskLoader<LoadResult<List<Movie>>>{
 
+    private String lang;
 
-    public JSONLoader(Context context) {
+    public JSONLoader(Context context, String lang) {
         super(context);
+        this.lang = lang;
     }
 
+    @Override
+    protected void onStartLoading(){
+        forceLoad();
+    }
+
+    @Override
     public LoadResult<List<Movie>> loadInBackground(){
         final StethoURLConnectionManager stethoManager = new StethoURLConnectionManager("API");
         ResultType resultType = ResultType.ERROR;
-        List<Movie> data = null;
+        List<Movie> data = new ArrayList<>();
         HttpURLConnection connection = null;
         InputStream in = null;
-        String lang = Locale.getDefault().getLanguage();
+        lang = Locale.getDefault().getLanguage();
 
         try {
             connection = TmdbApi.getPopularMoviesRequest(lang);
+            stethoManager.preConnect(connection, null);
             connection.connect();
             stethoManager.postConnect();
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
                 in = connection.getInputStream();
                 in = stethoManager.interpretResponseStream(in);
-                data = JSONParser.parseMovies(in);
+                data.addAll(JSONParser.parseMovies(in));
                 resultType = ResultType.OK;
             } else {
                 resultType = ResultType.NO_INTERNET;

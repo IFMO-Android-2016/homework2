@@ -7,6 +7,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,11 +23,14 @@ import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 /**
  * Экран, отображающий список популярных фильмов из The Movie DB.
  */
-public class PopularMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>>{
+public class PopularMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
     private RecyclerView recyclerView;
     private ProgressBar progressView;
     private TextView errorTextView;
+    private String language = null;
+
+    private static final String LANGUAGE = "LANGUAGE";
 
     @Nullable
     private MoviesRecyclerAdapter adapter;
@@ -45,19 +49,28 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         errorTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
 
+        if (adapter == null) {
+            adapter = new MoviesRecyclerAdapter(this);
+            recyclerView.setAdapter(adapter);
+        }
+
+        language = getResources().getConfiguration().locale.getLanguage();
+
         final Bundle loaderArgs = new Bundle();
+        loaderArgs.putString(LANGUAGE, language);
         getSupportLoaderManager().initLoader(0, loaderArgs, this);
     }
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        return new JSONLoader(this);
+        return new JSONLoader(this, args.getString(LANGUAGE));
     }
 
     @Override
-    public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> result){
-        if (result.resultType == ResultType.OK){
-            if (result.data != null && !result.data.isEmpty()){
+    public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> result) {
+        if (result.data != null) adapter.setMovies(result.data);
+        if (result.resultType == ResultType.OK) {
+            if (result.data != null && !result.data.isEmpty()) {
                 displayNonEmptyData(result.data);
             } else {
                 displayEmptyData();
@@ -72,7 +85,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         displayEmptyData();
     }
 
-    private void displayEmptyData(){
+    private void displayEmptyData() {
         progressView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         errorTextView.setVisibility(View.VISIBLE);
@@ -90,11 +103,11 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
         recyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void displayError(ResultType resultType){
+    private void displayError(ResultType resultType) {
         progressView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         errorTextView.setVisibility(View.VISIBLE);
-        if (resultType == ResultType.NO_INTERNET){
+        if (resultType == ResultType.NO_INTERNET) {
             errorTextView.setText(R.string.noInternet);
         } else {
             errorTextView.setText(R.string.error);
