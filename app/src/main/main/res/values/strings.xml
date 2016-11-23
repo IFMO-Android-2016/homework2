@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">TMDB Demo</string>
-    <string name="internet_error">No connect</string>
-    <string name="error">Something bad happend</string>
-</resources>

@@ -21,6 +21,7 @@ import ru.ifmo.droid2016.tmdb.utils.IOUtils;
 public class DOMParser {
     public static ArrayList<Movie> parseList(InputStream in) throws JSONException, IOException{
 
+        
         ArrayList<Movie> list = new ArrayList<>();
         String content = IOUtils.readToString(in, "UTF-8");
         JSONObject json = new JSONObject(content);
