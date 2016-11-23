@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 /**
  * Результат загрузки данных.
  */
-
+//insert
 public class LoadResult<T> {
 
     /**

@@ -3,6 +3,7 @@ package ru.ifmo.droid2016.tmdb.loader;
 /**
  * Kind of bad, incorrect or unexpected response from API.
  */
+//nChange
 public class BadResponseException extends Exception {
 
     public BadResponseException(String message) {

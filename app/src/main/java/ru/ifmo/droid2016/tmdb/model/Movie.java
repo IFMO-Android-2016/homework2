@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 /**
  * Информация о фильме, полученная из The Movie DB API
  */
-
+//Nchange
 public class Movie {
 
     /**
