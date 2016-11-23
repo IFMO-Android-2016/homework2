@@ -1,6 +1,7 @@
 package ru.ifmo.droid2016.tmdb.api;
 
 import android.net.Uri;
+import android.os.HandlerThread;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,7 +15,7 @@ import java.net.URL;
 public final class TmdbApi {
 
     // TODO: Зарегистрироваться на https://www.themoviedb.org и получить свой собственный ключ
-    //private static final String API_KEY = "ee1c42c80c58d28bc54efc844b63d114";
+    private static final String API_KEY = "0ae20dc7bfbe5b2504629e7414fcbdc4";
 
     private static final Uri BASE_URI = Uri.parse("https://api.themoviedb.org/3");
 
@@ -29,7 +30,9 @@ public final class TmdbApi {
      * @param lang язык пользователя
      */
     public static HttpURLConnection getPopularMoviesRequest(String lang) throws IOException {
-        // TODO
-        return (HttpURLConnection) new URL(BASE_URI.toString()).openConnection();
+
+        Uri url = (BASE_URI).buildUpon().appendPath("movie").appendPath("popular").appendQueryParameter("api_key", API_KEY).appendQueryParameter("language", lang).appendQueryParameter("page", "1").build();
+
+        return (HttpURLConnection) new URL(url.toString()).openConnection();
     }
 }
