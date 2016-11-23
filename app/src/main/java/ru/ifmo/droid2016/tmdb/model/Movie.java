@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 
 public class Movie {
 
-    /**
+    /**sss       n
      * Path изображения постера фильма. Как из Path получить URL, описано здесь:
      *
      * https://developers.themoviedb.org/3/getting-started/languages
@@ -18,7 +18,7 @@ public class Movie {
      * базовый URL для картинок: http://image.tmdb.org/t/p/ и
      */
     public final @NonNull String posterPath;
-
+    private final @NonNull String baseURL = "https://image.tmdb.org/t/p/w500";
     /**
      * Название фильма на языке оригинала.
      */
@@ -38,7 +38,7 @@ public class Movie {
                  String originalTitle,
                  String overviewText,
                  String localizedTitle) {
-        this.posterPath = posterPath;
+        this.posterPath = baseURL + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
