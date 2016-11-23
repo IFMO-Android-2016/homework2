@@ -1,6 +1,5 @@
 package ru.ifmo.droid2016.tmdb.loader;
 
-import android.support.annotation.Nullable;
 import android.util.JsonReader;
 import android.util.JsonToken;
 
@@ -19,10 +18,9 @@ import ru.ifmo.droid2016.tmdb.model.Movie;
 
 public class MoviesPullParser {
     private MoviesPullParser() {}
-    @Nullable
     public static List<Movie> parseMovies(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        List<Movie> movies = null;
+        List<Movie> movies = new ArrayList<>();
         try {
             reader.beginObject();
             String curName;
