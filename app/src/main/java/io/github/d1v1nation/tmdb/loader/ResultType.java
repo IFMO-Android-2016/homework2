@@ -1,4 +1,4 @@
-package ru.ifmo.droid2016.tmdb.loader;
+package io.github.d1v1nation.tmdb.loader;
 
 /**
  * Три возможных результат процесса загрузки данных.

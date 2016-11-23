@@ -1,4 +1,4 @@
-package ru.ifmo.droid2016.tmdb.model;
+package io.github.d1v1nation.tmdb.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,4 +43,5 @@ public class Movie {
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
     }
+
 }

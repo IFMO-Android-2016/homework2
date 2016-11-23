@@ -1,4 +1,4 @@
-package ru.ifmo.droid2016.tmdb;
+package io.github.d1v1nation.tmdb;
 
 import android.app.Application;
 
