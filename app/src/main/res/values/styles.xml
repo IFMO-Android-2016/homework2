@@ -8,4 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="textView">
+        <item name = "android:layout_toRightOf">@id/movie_image</item>item>
+        <item name = "android:layout_height">wrap_content</item>item>
+    </style>
+
+    <style name="textViewTitle" parent="textView">
+        <item name = "android:layout_width">match_parent</item>
+        <item name = "android:textSize">20sp</item>>
+    </style>
+
+    <style name="a_p_m">
+        <item name = "android:layout_width">wrap_content</item>item>
+        <item name = "android:layout_height">wrap_content</item>item>
+        <item name = "android:layout_gravity">center</item>item>
+        <item name = "android:visibility">gone</item>item>
+    </style>
+
 </resources>

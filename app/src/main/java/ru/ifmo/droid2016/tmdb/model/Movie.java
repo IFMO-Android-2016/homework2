@@ -17,6 +17,8 @@ public class Movie {
      * В рамках ДЗ можно не выполнять отдельный запрос /configuration, а использовать
      * базовый URL для картинок: http://image.tmdb.org/t/p/ и
      */
+    public final String baseURL = "https://image.tmdb.org/t/p/w500";
+
     public final @NonNull String posterPath;
 
     /**
@@ -38,7 +40,7 @@ public class Movie {
                  String originalTitle,
                  String overviewText,
                  String localizedTitle) {
-        this.posterPath = posterPath;
+        this.posterPath = "http://image.tmdb.org/t/p/w500" + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
