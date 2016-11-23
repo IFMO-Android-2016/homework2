@@ -43,4 +43,5 @@ public class Movie {
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
     }
+
 }
