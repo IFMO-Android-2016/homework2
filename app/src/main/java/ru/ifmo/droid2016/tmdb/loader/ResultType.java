@@ -18,5 +18,17 @@ public enum ResultType {
     /**
      * Данные не загружены по другой причине.
      */
-    ERROR
+    ERROR;
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case OK:
+                return "Access to the Interner";
+            case NO_INTERNET:
+                return "No access to the Internet";
+            default:
+                return "ERROR";
+        }
+    }
 }

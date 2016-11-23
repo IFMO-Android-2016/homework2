@@ -25,4 +25,11 @@ public class LoadResult<T> {
         this.resultType = resultType;
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "LoadResult(resultType=" + resultType
+                + ", data=" + data
+                + ")";
+    }
 }
