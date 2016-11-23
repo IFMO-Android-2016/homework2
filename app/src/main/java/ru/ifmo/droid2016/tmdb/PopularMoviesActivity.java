@@ -58,7 +58,7 @@ public class PopularMoviesActivity extends AppCompatActivity
 
         progressBar.setVisibility(View.VISIBLE);
         errorText.setVisibility(View.VISIBLE);
-        errorText.setText("Происходит загрузка данных");
+        errorText.setText("Загрузка данных");
         recycler.setVisibility(View.GONE);
 
         final Bundle loaderArgs = new Bundle();
