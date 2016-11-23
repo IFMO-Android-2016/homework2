@@ -71,12 +71,14 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
         } catch (IOException e) {
             stethoManager.httpExchangeFailed(e);
-            if (IOUtils.isConnectionAvailable(getContext(), false)) {
-                resultType = ResultType.ERROR;
-            } else {
-                resultType = ResultType.NO_INTERNET;
+            try {
+                if (!IOUtils.isConnectionAvailable(getContext(), false)) {
+                    resultType = ResultType.NO_INTERNET;
+                }
+            } catch (Exception er){
+                er.printStackTrace();
             }
-        } catch (BadResponseException | JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             IOUtils.closeSilently(inputStream);

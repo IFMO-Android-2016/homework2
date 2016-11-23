@@ -77,7 +77,7 @@ public class PopularMoviesActivity extends AppCompatActivity
         else if (data.resultType == ResultType.NO_INTERNET) {
             recyclerView.setVisibility(View.INVISIBLE);
             errorTextView.setVisibility(View.VISIBLE);
-            errorTextView.setText("Waiting connection...");
+            errorTextView.setText("No Internet");
         }
         else {
             recyclerView.setVisibility(View.INVISIBLE);
