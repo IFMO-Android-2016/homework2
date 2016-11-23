@@ -4,7 +4,11 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
     defaultConfig {
+<<<<<<< HEAD
         applicationId "io.github.d1v1nation.tmdb"
+=======
+        applicationId "ru.ifmo.droid2016.tmdb"
+>>>>>>> origin/master
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
@@ -26,8 +30,11 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
+<<<<<<< HEAD
     compile 'com.android.support:percent:24.2.1'
 
+=======
+>>>>>>> origin/master
     testCompile 'junit:junit:4.12'
 
     compile 'com.facebook.stetho:stetho:1.4.1'

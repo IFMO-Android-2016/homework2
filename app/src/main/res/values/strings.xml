@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">TMDB Demo</string>
+<<<<<<< HEAD
     <string name="nointernet">Отсутствует соединение</string>
     <string name="error">ERRORU</string>
+=======
+>>>>>>> origin/master
 </resources>
