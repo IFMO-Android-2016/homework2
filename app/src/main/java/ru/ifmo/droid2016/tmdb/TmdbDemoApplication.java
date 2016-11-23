@@ -1,6 +1,7 @@
 package ru.ifmo.droid2016.tmdb;
 
 import android.app.Application;
+import android.view.Window;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
