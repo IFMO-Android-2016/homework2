@@ -28,6 +28,7 @@ public class PagesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
     private List<Movie> data = null;
     ResultType resultType = ResultType.ERROR;
+    String languageOfLoadedData;
 
     public PagesLoader(Context context) {
         super(context);
@@ -35,7 +36,7 @@ public class PagesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
     @Override
     protected void onStartLoading() {
-        if (data == null)
+        if (data == null || languageOfLoadedData != Locale.getDefault().getLanguage())
             forceLoad();
         else
             deliverResult(new LoadResult<List<Movie>>(resultType, data));
@@ -68,6 +69,7 @@ public class PagesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
         InputStream in = null;
 
         try {
+            languageOfLoadedData = Locale.getDefault().getLanguage();
             connection = TmdbApi.getPopularMoviesRequest(Locale.getDefault().getLanguage());
             Log.d(PopularMoviesActivity.TAG, "Establishing connection: " + connection.getURL());
 
