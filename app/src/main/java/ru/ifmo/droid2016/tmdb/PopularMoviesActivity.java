@@ -81,7 +81,7 @@ public class PopularMoviesActivity extends AppCompatActivity implements LoaderMa
 
 
         if (savedInstanceState == null) {
-            getSupportLoaderManager().initLoader(1, null, this);
+            getSupportLoaderManager().initLoader(++lastPage, null, this);
         }
 
     }
