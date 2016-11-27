@@ -91,5 +91,5 @@ public class TmdbLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
         return new LoadResult<>(resultType, data);
     }
 
-    private static final String TAG = "Webcams";
+    private static final String TAG = "Movies";
 }

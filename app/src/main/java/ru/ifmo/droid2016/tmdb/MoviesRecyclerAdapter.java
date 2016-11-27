@@ -47,7 +47,8 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
         final Movie movie = movies.get(position);
         holder.titleView.setText(movie.localizedTitle);
         holder.imageView.setImageURI(movie.posterPath);
-        holder.descriptionView.setText(movie.overviewText);
+        holder.titleViewOrigin.setText(movie.originalTitle);
+        holder.overView.setText(movie.overviewText);
 
     }
 
@@ -60,17 +61,19 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
 
         final SimpleDraweeView imageView;
         final TextView titleView;
-        final TextView
+        final TextView titleViewOrigin;
+        final TextView overView;
 
         private MovieViewHolder(View itemView) {
             super(itemView);
             imageView = (SimpleDraweeView) itemView.findViewById(R.id.movie_image);
             titleView = (TextView) itemView.findViewById(R.id.movie_Localized_title);
-            titleView = (TextView) itemView.findViewById(R.id.movie_original_title);
+            titleViewOrigin = (TextView) itemView.findViewById(R.id.movie_original_title);
+            overView = (TextView) itemView.findViewById(R.id.movie_overview);
         }
 
         static MovieViewHolder newInstance(LayoutInflater layoutInflater, ViewGroup parent) {
-            final View view = layoutInflater.inflate(R.layout.movie_webcam, parent, false);
+            final View view = layoutInflater.inflate(R.layout.movie_item, parent, false);
             return new MovieViewHolder(view);
         }
     }

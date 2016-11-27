@@ -18,7 +18,7 @@ public class Movie {
      * базовый URL для картинок: http://image.tmdb.org/t/p/ и
      */
 
-    private final String BASE_URI = "http://image.tmdb.org/t/p/";
+    private final String BASE_URI = "http://image.tmdb.org/t/p/w500";
 
     public final @NonNull String posterPath;
 

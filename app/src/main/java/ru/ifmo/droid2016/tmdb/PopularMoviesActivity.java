@@ -1,8 +1,6 @@
 package ru.ifmo.droid2016.tmdb;
 
 
-
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -10,6 +8,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,7 +29,7 @@ public class PopularMoviesActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
 
-//    private static String lang = Locale.getDefault().getLanguage();
+    //    private static String lang = Locale.getDefault().getLanguage();
     private RecyclerView recyclerView;
     private ProgressBar progressView;
     private TextView errorTextView;
@@ -84,6 +83,17 @@ public class PopularMoviesActivity extends AppCompatActivity
         displayEmptyData();
     }
 
+    /*  protected void onResume() {
+                  if (!lang.equals(Locale.getDefault().getLanguage())) {
+                          lang = Locale.getDefault().getLanguage();
+                          Log.e(TAG, "onResume: changed locale");
+                          langWasChanged = true;
+                          getSupportLoaderManager().restartLoader(0, null, this);
+                      }
+                  super.onResume();
+             }
+
+  */
     private void displayEmptyData() {
         progressView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
@@ -115,6 +125,6 @@ public class PopularMoviesActivity extends AppCompatActivity
         errorTextView.setText(messageResId);
     }
 
-    private static final String TAG = "Webcams";
+    private static final String TAG = "Movies";
 
 }
