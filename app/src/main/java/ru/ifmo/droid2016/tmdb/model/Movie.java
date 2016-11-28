@@ -34,11 +34,13 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
+    private final String baseURL = "https://image.tmdb.org/t/p/w500";
+
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
                  String localizedTitle) {
-        this.posterPath = posterPath;
+        this.posterPath = baseURL + posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
