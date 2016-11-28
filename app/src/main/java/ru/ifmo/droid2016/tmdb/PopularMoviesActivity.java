@@ -34,6 +34,8 @@ public class PopularMoviesActivity extends AppCompatActivity
     private ProgressBar progressView;
     private TextView errorTextView;
 
+    private String lang = Locale.getDefault().getLanguage();
+
     @Nullable
     private MoviesRecyclerAdapter adapter;
 
@@ -83,17 +85,16 @@ public class PopularMoviesActivity extends AppCompatActivity
         displayEmptyData();
     }
 
-    /*  protected void onResume() {
-                  if (!lang.equals(Locale.getDefault().getLanguage())) {
-                          lang = Locale.getDefault().getLanguage();
-                          Log.e(TAG, "onResume: changed locale");
-                          langWasChanged = true;
-                          getSupportLoaderManager().restartLoader(0, null, this);
-                      }
-                  super.onResume();
-             }
+    protected void onResume() {
+        if (!lang.equals(Locale.getDefault().getLanguage())) {
+            lang = Locale.getDefault().getLanguage();
+            Log.e(TAG, "onResume: changed locale");
+            getSupportLoaderManager().restartLoader(0, null, this);
+        }
+        super.onResume();
+    }
 
-  */
+
     private void displayEmptyData() {
         progressView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
