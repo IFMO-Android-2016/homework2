@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="repeat">Повторить</string>
+    <string name="noInternetMessage">Отсутствует соединение с интернетом</string>
+    <string name="errorMessage">Неизвестная ошибка</string>
+</resources>

@@ -5,31 +5,37 @@ import android.net.Uri;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 
 /**
  * Методы для работы с The Movie DB API
- *
+ * <p>
  * https://www.themoviedb.org/documentation/api
  */
 public final class TmdbApi {
-
-    // TODO: Зарегистрироваться на https://www.themoviedb.org и получить свой собственный ключ
-    //private static final String API_KEY = "ee1c42c80c58d28bc54efc844b63d114";
+    private static final String API_KEY = "7ceb601dab82aeb68b85458eeb2cca93";
 
     private static final Uri BASE_URI = Uri.parse("https://api.themoviedb.org/3");
 
+    public static final String IMAGE_URI = "http://image.tmdb.org/t/p/w500";
 
-    private TmdbApi() {}
+    private TmdbApi() {
+    }
 
     /**
      * Возвращает {@link HttpURLConnection} для выполнения запроса популярных фильмов
-     *
+     * <p>
      * https://developers.themoviedb.org/3/movies/get-popular-movies
      *
      * @param lang язык пользователя
      */
-    public static HttpURLConnection getPopularMoviesRequest(String lang) throws IOException {
+    public static HttpURLConnection getPopularMoviesRequest(String lang, int page) throws IOException {
         // TODO
-        return (HttpURLConnection) new URL(BASE_URI.toString()).openConnection();
+        Uri uri = BASE_URI.buildUpon()
+                .appendEncodedPath("movie/popular")
+                .appendQueryParameter("api_key", API_KEY)
+                .appendQueryParameter("language", lang)
+                .appendQueryParameter("page", String.valueOf(page)).build();
+        return (HttpURLConnection) new URL(uri.toString()).openConnection();
     }
 }

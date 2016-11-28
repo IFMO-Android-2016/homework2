@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TMDB Demo</string>
+    <string name="repeat">Repeat</string>
+    <string name="noInternetMessage">No internet connection</string>
+    <string name="errorMessage">Error</string>
 </resources>
