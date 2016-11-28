@@ -34,13 +34,17 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
-    public Movie(String posterPath,
-                 String originalTitle,
-                 String overviewText,
-                 String localizedTitle) {
+    public final @Nullable  String vote;
+
+    public Movie(@NonNull String posterPath,
+                 @NonNull String originalTitle,
+                 @Nullable String overviewText,
+                 @Nullable String localizedTitle,
+                 @Nullable String vote) {
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.vote = "Average vote: " + vote;
     }
 }

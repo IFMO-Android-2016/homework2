@@ -21,8 +21,14 @@ public class LoadResult<T> {
     @Nullable
     public final T data;
 
-    public LoadResult(@NonNull ResultType resultType, @Nullable T data) {
+    public final int requestType;
+
+    public final int pagesLoaded;
+
+    public LoadResult(@NonNull ResultType resultType, @Nullable T data, int requestType, int pagesLoaded) {
         this.resultType = resultType;
         this.data = data;
+        this.requestType = requestType;
+        this.pagesLoaded = pagesLoaded;
     }
 }
