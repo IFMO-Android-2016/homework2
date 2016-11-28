@@ -181,11 +181,7 @@ public class PopularMoviesActivity extends AppCompatActivity
         int page = this.page + 1;
         args.putInt("page", page);
         args.putString("lang", lang);
-        if (force) {
-            getSupportLoaderManager().restartLoader(page, args, this);
-        } else {
-            getSupportLoaderManager().initLoader(page, args, this);
-        }
+        getSupportLoaderManager().restartLoader(0, args, this);
     }
 
     @Override
