@@ -15,6 +15,7 @@ public final class TmdbApi {
 
     // TODO: Зарегистрироваться на https://www.themoviedb.org и получить свой собственный ключ
     //private static final String API_KEY = "ee1c42c80c58d28bc54efc844b63d114";
+    private static final String API_KEY = "6920a828bf4889a34e7e13399f6f6129";
 
     private static final Uri BASE_URI = Uri.parse("https://api.themoviedb.org/3");
 
@@ -30,6 +31,12 @@ public final class TmdbApi {
      */
     public static HttpURLConnection getPopularMoviesRequest(String lang) throws IOException {
         // TODO
-        return (HttpURLConnection) new URL(BASE_URI.toString()).openConnection();
+        Uri uri = Uri.parse("https://api.themoviedb.org/3").buildUpon()
+                .appendPath("movie")
+                .appendPath("popular")
+                .appendQueryParameter("language", lang)
+                .appendQueryParameter("api_key", API_KEY)
+                .build();
+        return (HttpURLConnection) new URL(uri.toString()).openConnection();
     }
 }
