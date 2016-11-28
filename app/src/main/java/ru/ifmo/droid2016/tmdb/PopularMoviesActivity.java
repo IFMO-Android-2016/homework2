@@ -15,10 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,6 +36,7 @@ public class PopularMoviesActivity extends AppCompatActivity
     private TextView errorTextView;
 
     private int page = 1;
+    private ArrayList<Boolean> loaded = new ArrayList<>();
     private boolean nextPageLoaded = false, langChanged = false;
     private String lang = Locale.getDefault().getLanguage();
 
@@ -41,6 +44,7 @@ public class PopularMoviesActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putSerializable("loaded", loaded);
         outState.putString("lang", lang);
         outState.putInt("page", page);
         outState.putBoolean("nextPageLoaded", nextPageLoaded);
@@ -52,6 +56,7 @@ public class PopularMoviesActivity extends AppCompatActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
+        loaded = (ArrayList<Boolean>) savedInstanceState.getSerializable("loaded");
         lang = savedInstanceState.getString("lang");
         page = savedInstanceState.getInt("page");
         nextPageLoaded = savedInstanceState.getBoolean("nextPageLoaded");
@@ -87,9 +92,11 @@ public class PopularMoviesActivity extends AppCompatActivity
             this.lang = Locale.getDefault().getLanguage();
             langChanged = true;
 
+
             destroyLoaders();
-            page = 1;
-            getSupportLoaderManager().initLoader(page, null, getCallback());
+            moviesRecyclerView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            initLoaders();
         }
 
         moviesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -97,8 +104,12 @@ public class PopularMoviesActivity extends AppCompatActivity
             public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-                if (!nextPageLoaded && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 6
+                if (!nextPageLoaded
+                        && adapter != null
+                        && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 5
                         && page != MoviesPullParser.totalPages) {
+
+                    loaded.add(false);
                     nextPageLoaded = true;
                     getSupportLoaderManager().initLoader(++page, null, getCallback());
                 }
@@ -113,10 +124,11 @@ public class PopularMoviesActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> result) {
-        nextPageLoaded = false;
         if (result.resultType == ResultType.OK) {
             if (result.data != null && !result.data.isEmpty()) {
-                displayData(result.data);
+                loaded.set(loader.getId() - 1, true);
+                displayData(result.data, result.page - 1);
+                nextPageLoaded = false;
             } else {
                 displayData();
             }
@@ -135,10 +147,14 @@ public class PopularMoviesActivity extends AppCompatActivity
             adapter = null;
             langChanged = false;
         }
-        displayData();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void initLoaders() {
+        loaded.clear();
+        for (int i = 0; i < page; i++) {
+            loaded.add(false);
+        }
         for (int i = 1; i <= page; i++) {
             getSupportLoaderManager().initLoader(i, null, getCallback());
         }
@@ -157,15 +173,23 @@ public class PopularMoviesActivity extends AppCompatActivity
         errorTextView.setText(R.string.movies_not_found);
     }
 
-    private void displayData(List<Movie> movies) {
+    private void displayData(List<Movie> movies, int pg) {
         if (adapter == null) {
             adapter = new MoviesRecyclerAdapter(this);
             moviesRecyclerView.setAdapter(adapter);
         }
-        adapter.addMovies(movies);
-        progressBar.setVisibility(View.GONE);
+        adapter.addMovies(movies, pg);
         errorTextView.setVisibility(View.GONE);
-        moviesRecyclerView.setVisibility(View.VISIBLE);
+        boolean ok = true;
+        for (int i = 0; i < page; i++) {
+            if (!loaded.get(i)) {
+                ok = false; break;
+            }
+        }
+        if (ok) {
+            progressBar.setVisibility(View.GONE);
+            moviesRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void displayError(ResultType resultType) {

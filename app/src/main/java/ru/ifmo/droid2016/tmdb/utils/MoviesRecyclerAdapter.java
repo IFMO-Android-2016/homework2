@@ -2,6 +2,7 @@ package ru.ifmo.droid2016.tmdb.utils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.ifmo.droid2016.tmdb.R;
+import ru.ifmo.droid2016.tmdb.loader.MoviesPullParser;
 import ru.ifmo.droid2016.tmdb.model.Movie;
 
 /**
@@ -31,14 +33,11 @@ public class MoviesRecyclerAdapter
 
     private final Context context;
     private final LayoutInflater layoutInflater;
-    private List<Movie> movies = Collections.emptyList();
+    private SparseArray<List<Movie>> movies = new SparseArray<>();
 
-    public void addMovies(List<Movie> movies) {
-        if (!this.movies.isEmpty()) {
-            this.movies.addAll(movies);
-        } else {
-            this.movies = movies;
-        }
+    public void addMovies(List<Movie> movies, int page) {
+        Log.d("ADDED MOVIES", String.valueOf(page));
+        this.movies.append(page, movies);
         notifyDataSetChanged();
     }
 
@@ -49,7 +48,8 @@ public class MoviesRecyclerAdapter
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        final Movie movie = movies.get(position);
+        final Movie movie = movies.get(position / MoviesPullParser.itemsOnPage)
+                                  .get(position % MoviesPullParser.itemsOnPage);
         holder.originalTitleView.setText(movie.originalTitle);
         holder.localizedTitleView.setText(movie.localizedTitle);
         holder.overviewTextView.setText(movie.overviewText);
@@ -58,7 +58,7 @@ public class MoviesRecyclerAdapter
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return this.movies.size() * MoviesPullParser.itemsOnPage;
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {

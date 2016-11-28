@@ -20,6 +20,7 @@ public class MoviesPullParser {
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500";
 
     public static int totalPages = 0;
+    public static int itemsOnPage = 0;
 
     public static List<Movie> parseMovies(InputStream in) throws IOException {
         return parseMovies(new JsonReader(new InputStreamReader(in, "UTF-8")));
@@ -83,6 +84,7 @@ public class MoviesPullParser {
             }
         }
 
+        itemsOnPage = movies.size();
         reader.endObject();
         return movies;
     }

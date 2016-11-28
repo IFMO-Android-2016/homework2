@@ -30,6 +30,10 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
     private int page;
     private LoadResult<List<Movie>> result = null;
 
+    public boolean finished() {
+        return this.result != null;
+    }
+
     @Override
     protected void onStartLoading() {
         if (result == null) {
@@ -85,7 +89,7 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
             }
         }
 
-        this.result = new LoadResult<>(resultType, movies);
+        this.result = new LoadResult<>(resultType, movies, page);
         return this.result;
     }
 
