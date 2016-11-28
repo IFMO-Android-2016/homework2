@@ -1,17 +1,115 @@
 package ru.ifmo.droid2016.tmdb;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import java.util.List;
+
+import ru.ifmo.droid2016.tmdb.loader.JSONLoader;
+import ru.ifmo.droid2016.tmdb.loader.LoadResult;
+import ru.ifmo.droid2016.tmdb.loader.ResultType;
+import ru.ifmo.droid2016.tmdb.model.Movie;
+import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 
 /**
  * Экран, отображающий список популярных фильмов из The Movie DB.
  */
-public class PopularMoviesActivity extends AppCompatActivity {
+public class PopularMoviesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
+
+    private RecyclerView recyclerView;
+    private ProgressBar progressView;
+    private TextView errorTextView;
+
+    private static final String LANGUAGE = "LANGUAGE";
+
+    @Nullable
+    private MoviesRecyclerAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
+        progressView = (ProgressBar) findViewById(R.id.progressBar);
+        errorTextView = (TextView) findViewById(R.id.error_text);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new RecylcerDividersDecorator(getResources().getColor(R.color.colorPrimary)));
+
+        progressView.setVisibility(View.VISIBLE);
+        errorTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+
+        if (adapter == null) {
+            adapter = new MoviesRecyclerAdapter(this);
+            recyclerView.setAdapter(adapter);
+        }
+
+        String language = getResources().getConfiguration().locale.getLanguage();
+
+        final Bundle loaderArgs = new Bundle();
+        loaderArgs.putString(LANGUAGE, language);
+        getSupportLoaderManager().initLoader(0, loaderArgs, this);
     }
 
+    @Override
+    public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
+        return new JSONLoader(this, args.getString(LANGUAGE));
+    }
+
+    @Override
+    public void onLoadFinished(Loader<LoadResult<List<Movie>>> loader, LoadResult<List<Movie>> result) {
+        if (result.data != null) adapter.setMovies(result.data);
+        if (result.resultType == ResultType.OK) {
+            if (result.data != null && !result.data.isEmpty()) {
+                displayNonEmptyData(result.data);
+            } else {
+                displayEmptyData();
+            }
+        } else {
+            displayError(result.resultType);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<LoadResult<List<Movie>>> loader) {
+        displayEmptyData();
+    }
+
+    private void displayEmptyData() {
+        progressView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        errorTextView.setVisibility(View.VISIBLE);
+        errorTextView.setText(R.string.notFound);
+    }
+
+    private void displayNonEmptyData(List<Movie> movies) {
+        if (adapter == null) {
+            adapter = new MoviesRecyclerAdapter(this);
+            recyclerView.setAdapter(adapter);
+        }
+        adapter.setMovies(movies);
+        progressView.setVisibility(View.GONE);
+        errorTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void displayError(ResultType resultType) {
+        progressView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        errorTextView.setVisibility(View.VISIBLE);
+        if (resultType == ResultType.NO_INTERNET) {
+            errorTextView.setText(R.string.noInternet);
+        } else {
+            errorTextView.setText(R.string.error);
+        }
+    }
 }

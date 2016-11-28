@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:id="@+id/movie_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/movie_localized_title"
+        android:layout_alignTop="@id/movie_image"
+        android:layout_toRightOf="@id/movie_image"
+        android:layout_marginLeft="12dp"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/movie_original_title"
+        android:layout_below="@+id/movie_localized_title"
+        android:textSize="16sp"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/movie_image"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/movie_overview"
+        android:layout_below="@+id/movie_image"
+        android:textSize="12sp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="20dp"/>
+</RelativeLayout>

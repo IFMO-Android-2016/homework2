@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TMDB Demo</string>
+    <string name="notFound">No such films</string>
+    <string name="noInternet">No internet connection</string>
+    <string name="error">Error</string>
 </resources>
