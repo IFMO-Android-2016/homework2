@@ -43,4 +43,9 @@ public class Movie {
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
     }
+
+    public String getFullPosterPath() {
+        return "http://image.tmdb.org/t/p/w342//" + this.posterPath;
+    }
+
 }

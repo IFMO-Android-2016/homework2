@@ -18,5 +18,5 @@ public enum ResultType {
     /**
      * Данные не загружены по другой причине.
      */
-    ERROR
+    ERROR;
 }
