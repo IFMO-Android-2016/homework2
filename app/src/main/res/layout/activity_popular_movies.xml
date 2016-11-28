@@ -5,5 +5,16 @@
     android:layout_height="match_parent">
 
     <!-- TODO -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ProgressBar style = "@style/a_p_m"
+        android:id="@+id/progress"
+        android:indeterminate="true" />
+
+    <TextView style = "@style/a_p_m"
+        android:id="@+id/error_text" />
 
 </FrameLayout>
