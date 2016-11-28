@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TMDB Demo</string>
+    <string name="ERROR">Ошибка</string>
+    <string name="NO_INTERNET">Остутствует соединение</string>
 </resources>

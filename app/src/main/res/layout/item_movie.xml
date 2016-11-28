@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:weightSum="1"
+    android:background="@color/light_gray">
+
+    <TextView
+        android:id="@+id/movie_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textSize="22dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/movie_overview"
+        android:textStyle="normal"
+        android:textSize="18dp"
+        android:layout_below="@+id/movie_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/movie_original_title"
+        android:layout_width="267dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:layout_weight="0.55"
+        android:textSize="22dp"
+        android:layout_below="@+id/movie_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/movie_image"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_below="@+id/movie_original_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp" />
+
+
+</RelativeLayout>
+
