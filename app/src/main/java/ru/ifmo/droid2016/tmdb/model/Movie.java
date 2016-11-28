@@ -17,6 +17,7 @@ public class Movie {
      * В рамках ДЗ можно не выполнять отдельный запрос /configuration, а использовать
      * базовый URL для картинок: http://image.tmdb.org/t/p/ и
      */
+    private static final String posterPrePath = "https://image.tmdb.org/t/p/w500";
     public final @NonNull String posterPath;
 
     /**
@@ -34,13 +35,20 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
-    public Movie(String posterPath,
-                 String originalTitle,
-                 String overviewText,
-                 String localizedTitle) {
-        this.posterPath = posterPath;
+    /**
+     * Рейтинг фильма.
+     */
+    public final @NonNull Double averageVote;
+
+    public Movie(@NonNull String posterPath,
+                 @NonNull String originalTitle,
+                 @Nullable String overviewText,
+                 @Nullable String localizedTitle,
+                 @NonNull Double averageVote) {
+        this.posterPath = posterPrePath.concat(posterPath);
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.averageVote = averageVote;
     }
 }
