@@ -70,7 +70,7 @@ public final class IOUtils {
     }
 
     /**
-     * @return буфер размеров в 8кб для I/O. Потокобезопасный.ы
+     * @return буфер размеров в 8кб для I/O. Потокобезопасный.
      */
     public static byte[] getIOBuffer() {
         byte[] buffer = bufferThreadLocal.get();
