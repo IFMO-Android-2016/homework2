@@ -10,7 +10,7 @@ public class TmdbDemoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
-        Fresco.initialize(this);
+        Stetho.initializeWithDefaults (this);
+        Fresco.initialize (this);
     }
 }
