@@ -20,6 +20,11 @@ public class Movie {
     public final @NonNull String posterPath;
 
     /**
+     * Название фильма на языке пользователя.
+     */
+    public final @Nullable String localizedTitle;
+
+    /**
      * Название фильма на языке оригинала.
      */
     public final @NonNull String originalTitle;
@@ -29,15 +34,10 @@ public class Movie {
      */
     public final @Nullable String overviewText;
 
-    /**
-     * Название фильма на языке пользователя.
-     */
-    public final @Nullable String localizedTitle;
-
-    public Movie(String posterPath,
-                 String originalTitle,
-                 String overviewText,
-                 String localizedTitle) {
+    public Movie(@NonNull String posterPath,
+                 @NonNull String originalTitle,
+                 @Nullable String overviewText,
+                 @Nullable String localizedTitle) {
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
