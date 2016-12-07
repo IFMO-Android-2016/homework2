@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class IOUtils {
+
+    private static final String LOG_TAG = IOUtils.class.getSimpleName();
 
     /**
      * Читает содержимое потока в строку, используя указанный charset
@@ -22,6 +25,7 @@ public final class IOUtils {
 
         while ((readSize = in.read(buffer)) >= 0) {
             baos.write(buffer, 0, readSize);
+            //Log.d(LOG_TAG, "Downloading...");
         }
         final byte[] data = baos.toByteArray();
         final String content = new String(data, charset);
