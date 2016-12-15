@@ -24,12 +24,12 @@ import ru.ifmo.droid2016.tmdb.utils.RecylcerDividersDecorator;
 public class PopularMoviesActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<LoadResult<List<Movie>>> {
 
+    @Nullable
+    private MoviesRecyclerAdapter adapter;
+
     private ProgressBar progressView;
     private RecyclerView recyclerView;
     private TextView errorTextView;
-
-    @Nullable
-    private MoviesRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
