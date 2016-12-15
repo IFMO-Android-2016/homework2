@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.1.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d0dda274b703dd9c5bb056867649d22b4171ae7d">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.1.0_75a948d1f0d55c453bfa5771efd3fa94df46aac2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-utils-24.2.1_74667b3e0d0d9eac8c0c2be2374ae45d7f7ebfab.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7521486d9bfd2cd9e756e0cf75ed7d97f2ce2d3b">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-24.2.1_d076d27a91875940dd385b8e34d9b842325982cc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.facebook.fresco\drawee\0.14.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="680dce4daa07a2299de95f279df696152b595239">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-drawee-0.14.0_110800055c97953f553b31c354f249cb010a0b43.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="4f255362175f7e12f3cd2324a75adda688852f5f">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\instant-run_698011aba1da5b468c2278002ea99421dc0108e1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.facebook.fresco\fbcore\0.14.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="3c8045f8d5162a834267fd1aa8678bc66ba02e30">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-fbcore-0.14.0_2d2dcf10c8e2a626e540e821e0efbc65f28a4df2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-support-compat-24.2.1_483839576457c2155a3a323d06dd9993e93809c8.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Елена\.gradle\caches\modules-2\files-2.1\com.google.code.findbugs\jsr305\2.0.1\516c03b21d50a644d538de0f0369c620989cd8f0\jsr305-2.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="516c03b21d50a644d538de0f0369c620989cd8f0">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\jsr305-2.0.1_c3a595826d37ae667911d8bc8659e93fb18a87b8.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_565a1138c5e403191369af76eaa09848e85f6fb1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_3cc5639390d99a5e26ecebc1852b4722a7967c0d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.facebook.stetho\stetho\1.4.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="26b6f0185cbba8917ba9d9d0bd170f95311622ab">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.facebook.stetho-stetho-1.4.1_1a501c423d8165505cf1b677aaa0e49c08b32880.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_807bde2b0bd1731247cc86a6f31ffa5683d8394f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-24.2.1_b8ec100317be06a5febb150ff17a209e8a834f29.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="fbf8da429efd5ad21e02e3e5ecaa1efc4167878d">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_d2b48cc83a2447f65232892493adef2e9389f386.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Елена\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-tasks\1.4.0\d85884acf6810a3bbbecb587f239005cbc846dc4\bolts-tasks-1.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\bolts-tasks-1.4.0_3baed8e2fd73f817979964d45624b19ae6e096e3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Елена\.gradle\caches\modules-2\files-2.1\commons-cli\commons-cli\1.2\2bf96b7aa8b611c177d329452af1dc933e14501c\commons-cli-1.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="2bf96b7aa8b611c177d329452af1dc933e14501c">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\commons-cli-1.2_57ecd88a3c3b7784a1891d21dcf69e54bc3b72d9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.facebook.fresco\imagepipeline-base\0.14.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="f1995ee2d6ef243e3591630728aa9cb72c0e7ed4">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-imagepipeline-base-0.14.0_4ff2c01f3ffb073966b7ba04a06c8d96aa6adf94.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-24.2.1_fe1ab0bde9dfd218d6c183ed182ccda53e6b4186.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.1.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="4477ea44f5ec5ad064022a22691732d7638ff197">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appindexing-8.1.0_453ddfdc40e1c216360c485d7870f818d3e05167.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.facebook.fresco\fresco\0.14.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="cfbe1fddc3367dfe1189f4c2ea9a5c4b6b3516f8">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-fresco-0.14.0_6a0555e826446a9fb6d324e47b4cd1f003a02402.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-24.2.1_da6b66af289e86550c44a0454a9e4dcfdda0d780.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-support-fragment-24.2.1_468b95ea4f46bb5eb975495c0de299ccfe322189.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="94bc1dfb84dcc8b6f6f8f7cc726d7b2dd39c1574">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-animated-vector-drawable-24.2.1_10e3528af767e812af6927d0f499f33d46f6d613.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\sdk\extras\android\m2repository\com\android\support\support-annotations\24.2.1\support-annotations-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\support-annotations-24.2.1_e02ce9ea35e02d209308b6785607ba642a9c93a5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.facebook.fresco\imagepipeline\0.14.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="ca6fbb0f8d601505b67df3fe396bd62790c28488">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.facebook.fresco-imagepipeline-0.14.0_6f0ad05923ae58bafa7a1b1571352a231d1002c3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-24.2.1_0450d1ae67afda916c17b24fb4cdfa4c293cb7ed.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="867dad63c33388ff8c7644b236579355036d075f">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_f53883a003bb20c817ec7fa4d85a5350bd9659c0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="43b2dba6b5a0b14527961b75329d0b90025f15ea">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-24.2.1_71a2efe35d5f2ba107e1e396b117c44a162fb90d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0c1fcf91863b52e4b9039c8d526026a3993bccd1">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_101c2d2d8522a48be79154fd6459a88fd7c49163.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\andro\homework2-master\app\build\intermediates\exploded-aar\com.facebook.stetho\stetho-urlconnection\1.4.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="4a006d38e11f36c9a76857df5d05f5efc742814c">
+        <dex dex="C:\andro\homework2-master\app\build\intermediates\pre-dexed\debug\com.facebook.stetho-stetho-urlconnection-1.4.1_bf078394e49c275166cb7ef190e82da993f404d4.jar" />
+    </item>
+
+</items>
