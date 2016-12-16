@@ -64,7 +64,7 @@ class MovieScroll extends RecyclerView.Adapter<MovieScroll.MovieViewHolder> {
 
         MovieViewHolder(View itemView) {
             super(itemView);
-            localizedTitleView = (TextView) itemView.findViewById(R.id.movie_title);
+            localizedTitleView = (TextView) itemView.findViewById(R.id.movie_title_trans);
             imageView = (SimpleDraweeView) itemView.findViewById(R.id.movie_image);
             overviewTextView = (TextView) itemView.findViewById(R.id.text);
             originalTitleView = (TextView) itemView.findViewById(R.id.movie_original_title);
