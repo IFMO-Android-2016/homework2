@@ -2,7 +2,7 @@
     package="ru.ifmo.droid2016.tmdb">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         android:name=".TmdbDemoApplication">
 
-        <activity android:name=".PopularMoviesActivity">
+        <activity android:name=".utils.PopularMoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
