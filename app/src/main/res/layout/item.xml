@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Название фильма"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:layout_weight="1"
+            android:textAlignment="viewStart"
+            android:typeface="normal"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:text="Оригинал"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/originalTitle"
+            android:layout_weight="1"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="normal|italic"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="match_parent"
+        android:layout_height="435dp"
+        app:srcCompat="@android:drawable/editbox_background"
+        android:id="@+id/poster" />
+
+    <TextView
+        android:text="Описание"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/overview"
+        android:textAlignment="center" />
+</LinearLayout>
