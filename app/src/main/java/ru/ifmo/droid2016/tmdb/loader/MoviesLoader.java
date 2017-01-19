@@ -22,6 +22,13 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
         super(context);
     }
 
+
+    @Override
+    protected void onStartLoading() {
+        forceLoad();
+    }
+
+
     @Override
     public LoadResult<List<Movie>> loadInBackground() {
         ResultType resultType = ResultType.ERROR;
@@ -35,7 +42,6 @@ public class MoviesLoader extends AsyncTaskLoader<LoadResult<List<Movie>>> {
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 resultType = ResultType.OK;
-                Log.e("Meow", "Result OK.");
                 result = JSONParser.parse(connection.getInputStream());
             } else {
                 resultType = ResultType.NO_INTERNET;

@@ -35,13 +35,13 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="435dp"
         app:srcCompat="@android:drawable/editbox_background"
         android:id="@+id/poster" />
 
     <TextView
         android:text="Описание"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/overview"
         android:textAlignment="center" />

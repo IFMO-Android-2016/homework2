@@ -53,7 +53,6 @@ public class PopularMoviesActivity extends AppCompatActivity
 
     @Override
     public Loader<LoadResult<List<Movie>>> onCreateLoader(int id, Bundle args) {
-        Log.e("Meow", "onCreateLoader");
         return new MoviesLoader(this);
     }
 
@@ -62,12 +61,10 @@ public class PopularMoviesActivity extends AppCompatActivity
         if (result.resultType == ResultType.OK) {
             if (result.data != null && !result.data.isEmpty()) {
                 if (adapter == null) {
-                    Log.e("Meow", "null adapter.");
                     adapter = new ViewAdapter(this);
                     recyclerView.setAdapter(adapter);
                 }
                 adapter.updateMoviesList(result.data);
-                Log.e("Meow", "Updating movies.");
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             } else {

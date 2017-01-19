@@ -2,6 +2,7 @@ package ru.ifmo.droid2016.tmdb.parser;
 
 import android.util.JsonReader;
 import android.util.JsonToken;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -23,8 +24,9 @@ public class JSONParser {
         try (JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"))) {
             reader.beginObject();
             while(reader.hasNext()) {
+
                 String name = reader.nextName();
-                if (name.equals("result")) {
+                if (name.equals("results")) {
                     reader.beginArray();
                     while (reader.hasNext()) {
                         if (reader.peek() == JsonToken.NULL) {
@@ -35,29 +37,36 @@ public class JSONParser {
                         String curOriginalTitle = "";
                         String curOverview = "";
                         String curTitle = "";
-                        String curName = reader.nextName();
-                        switch (curName) {
-                            case "poster_path":
-                                curPosterPath = reader.nextString();
-                                break;
-                            case "original_title":
-                                curOriginalTitle = reader.nextString();
-                                break;
-                            case "overview":
-                                curOverview = reader.nextString();
-                                break;
-                            case "title":
-                                curTitle = reader.nextString();
-                                break;
-                            default:
+                        while (reader.hasNext()) {
+                            if (reader.peek() == JsonToken.NULL) {
                                 reader.skipValue();
-                                break;
+                            }
+                            String curName = reader.nextName();
+                            switch (curName) {
+                                case "poster_path":
+                                    curPosterPath = reader.nextString();
+                                    break;
+                                case "original_title":
+                                    curOriginalTitle = reader.nextString();
+                                    break;
+                                case "overview":
+                                    curOverview = reader.nextString();
+                                    break;
+                                case "title":
+                                    curTitle = reader.nextString();
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
+                            }
                         }
-
                         result.add(new Movie(curPosterPath, curOriginalTitle, curOverview, curTitle));
                         reader.endObject();
                     }
                     reader.endArray();
+                } else {
+
+                    reader.nextInt();
                 }
             }
             reader.endObject();

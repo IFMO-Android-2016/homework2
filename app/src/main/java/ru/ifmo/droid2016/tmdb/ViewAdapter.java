@@ -3,6 +3,7 @@ package ru.ifmo.droid2016.tmdb;
 import android.content.Context;
 import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return movies == null ? 0 : movies.size();
     }
 
     public  static class ViewHolder extends RecyclerView.ViewHolder {
