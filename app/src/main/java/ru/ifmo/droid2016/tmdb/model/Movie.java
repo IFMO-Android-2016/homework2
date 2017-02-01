@@ -3,6 +3,9 @@ package ru.ifmo.droid2016.tmdb.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Информация о фильме, полученная из The Movie DB API
  */
@@ -42,5 +45,12 @@ public class Movie {
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+    }
+
+    public Movie(JSONObject json) throws JSONException {
+        posterPath = json.getString("poster_path");
+        originalTitle = json.getString("original_title");
+        overviewText = json.getString("overview");
+        localizedTitle = json.getString("title");
     }
 }
