@@ -1,6 +1,7 @@
 package ru.ifmo.droid2016.tmdb.utils;
 
 import android.content.Context;
+import android.content.IntentSender;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -65,8 +66,12 @@ public final class IOUtils {
         if (connectivityManager == null) {
             return defaultValue;
         }
-        final NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
-        return ni != null && ni.isConnected();
+        try {
+            final NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+            return ni != null && ni.isConnected();
+        } catch (SecurityException e) {
+            return defaultValue;
+        }
     }
 
     /**
