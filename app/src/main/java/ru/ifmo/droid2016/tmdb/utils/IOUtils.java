@@ -5,6 +5,7 @@ import android.content.IntentSender;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -70,6 +71,7 @@ public final class IOUtils {
             final NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
             return ni != null && ni.isConnected();
         } catch (SecurityException e) {
+            Log.d("Check connection", "caught an exception");
             return defaultValue;
         }
     }
