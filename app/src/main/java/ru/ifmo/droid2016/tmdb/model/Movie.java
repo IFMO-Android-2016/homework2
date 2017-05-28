@@ -34,13 +34,16 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
+    public final int id;
+
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
-                 String localizedTitle) {
+                 String localizedTitle, int id) {
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.id = id;
     }
 }
