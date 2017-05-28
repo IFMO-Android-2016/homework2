@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/movie_poster"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/movie_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/movie_poster"
+        android:layout_toRightOf="@id/movie_poster"
+        android:layout_marginLeft="12dp"
+        android:textSize="14sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/movie_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/movie_title"
+        android:layout_toRightOf="@id/movie_poster"
+        android:layout_marginLeft="12dp"
+        android:textSize="14sp"
+        android:textStyle="normal"/>
+    <TextView
+        android:id="@+id/movie_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/movie_overview"
+        android:layout_toRightOf="@id/movie_poster"
+        android:layout_marginLeft="12dp"
+        android:textSize="10sp"
+        android:textStyle="italic"
+        />
+
+</RelativeLayout>

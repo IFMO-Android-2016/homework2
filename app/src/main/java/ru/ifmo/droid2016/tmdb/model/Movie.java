@@ -34,13 +34,18 @@ public class Movie {
      */
     public final @Nullable String localizedTitle;
 
+    public final @Nullable  String rating;
+
+
     public Movie(String posterPath,
                  String originalTitle,
                  String overviewText,
-                 String localizedTitle) {
+                 String localizedTitle,
+                 String rating) {
         this.posterPath = posterPath;
         this.originalTitle = originalTitle;
         this.overviewText = overviewText;
         this.localizedTitle = localizedTitle;
+        this.rating = "Rating: " + rating;
     }
 }
