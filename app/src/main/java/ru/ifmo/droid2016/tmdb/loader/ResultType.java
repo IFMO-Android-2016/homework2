@@ -3,6 +3,7 @@ package ru.ifmo.droid2016.tmdb.loader;
 /**
  * Три возможных результат процесса загрузки данных.
  */
+//Nchange
 public enum ResultType {
 
     /**
