@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="30dp" >
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id = "@+id/movie_icon"
+        android:layout_width="match_parent"
+        android:layout_height= "385dp"
+        android:layout_marginBottom="10dp"
+        />
+    <TextView
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id = "@+id/movie_original_title"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id = "@+id/movie_local_title"
+        android:layout_marginBottom="10dp"
+        />
+    <TextView
+        android:id = "@+id/overview"
+        android:textStyle="normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        />
+</LinearLayout>
